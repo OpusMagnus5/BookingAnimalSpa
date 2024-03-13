@@ -11,6 +11,7 @@
     <modules>
         <module>ConfigServer</module>
         <module>ServiceDiscovery</module>
+        <module>Gateway</module>
     </modules>
 
     <properties>
@@ -41,6 +42,11 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+                <version>${spring.cloud.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-gateway</artifactId>
                 <version>${spring.cloud.version}</version>
             </dependency>
             <dependency>
