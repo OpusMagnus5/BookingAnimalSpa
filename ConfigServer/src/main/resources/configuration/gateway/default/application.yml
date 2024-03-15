@@ -1,0 +1,12 @@
+server:
+  port: 8011
+
+eureka:
+  client:
+    service-url:
+      defaultZone: "http://localhost:8762/eureka/"
+
+spring:
+  threads:
+    virtual:
+      enabled: true
