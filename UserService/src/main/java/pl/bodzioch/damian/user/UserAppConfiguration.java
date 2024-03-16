@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @RequiredArgsConstructor
-class AppConfiguration {
+class UserAppConfiguration {
 
     private final UserRepository userRepository;
 

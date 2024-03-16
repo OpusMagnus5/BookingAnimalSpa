@@ -1,6 +1,8 @@
 package pl.bodzioch.damian.user;
 
+import java.util.Optional;
+
 interface UserRepository {
 
-    UserEntity getById(Long userId);
+    Optional<UserEntity> getByUsername(String username);
 }

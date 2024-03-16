@@ -8,6 +8,8 @@ record User(
         Password password,
         Email email, City city,
         PhoneNumber phoneNumber,
-        CompanyId companyId
+        CompanyId companyId,
+        CreateTime createTime,
+        ModifyTime modifyTime
 ) {
 }

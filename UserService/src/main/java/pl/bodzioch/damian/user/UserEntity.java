@@ -1,6 +1,7 @@
 package pl.bodzioch.damian.user;
 
 import jakarta.persistence.*;
+import lombok.Getter;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.OptimisticLocking;
 import org.hibernate.generator.EventType;
@@ -9,8 +10,9 @@ import pl.bodzioch.damian.utils.GeneratedUuidValue;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Entity(name = "user")
+@Entity(name = "users")
 @OptimisticLocking
+@Getter
 class UserEntity {
 
     @Id
@@ -22,7 +24,7 @@ class UserEntity {
     private UUID uuid;
 
     @Version
-    private Long version;
+    private Integer version;
 
     @NaturalId
     private String username;
@@ -33,6 +35,8 @@ class UserEntity {
     private String email;
 
     private String city;
+
+    private String country;
 
     @Column(name = "telephone_number")
     private String phoneNumber;
