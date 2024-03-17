@@ -22,6 +22,7 @@ class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "client_id_gen")
     @SequenceGenerator(name = "client_id_gen", sequenceName = "client_id_seq")
+    @Setter(AccessLevel.PROTECTED)
     private Long id;
 
     @GeneratedUuidValue(types = EventType.INSERT)

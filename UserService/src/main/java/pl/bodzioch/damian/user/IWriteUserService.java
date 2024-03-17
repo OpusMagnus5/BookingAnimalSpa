@@ -1,5 +1,5 @@
 package pl.bodzioch.damian.user;
 
-interface IUserService {
+interface IWriteUserService {
     User createNewUser(User user);
 }

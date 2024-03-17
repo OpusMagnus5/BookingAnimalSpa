@@ -1,11 +1,15 @@
 package pl.bodzioch.damian.dto;
 
-import lombok.ToString;
-
 import java.io.Serializable;
 
-@ToString
 public record AppErrorSource(
         String pointer
 ) implements Serializable {
+
+    @Override
+    public String toString() {
+        return "AppErrorSource{" +
+                "pointer='" + pointer + '\'' +
+                '}';
+    }
 }

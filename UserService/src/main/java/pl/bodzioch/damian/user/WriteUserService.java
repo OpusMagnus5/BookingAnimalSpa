@@ -10,15 +10,16 @@ import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-class UserService implements IUserService {
+class WriteUserService implements IWriteUserService {
 
-    private final IUserRepository userRepository;
+    private final IUserWriteRepository userWriteRepository;
+    private final IUserReadRepository userReadRepository;
 
     @Override
     public User createNewUser(User user) {
-        Optional<User> userEntity = userRepository.getByNaturalIds(user.username(), user.email());
+        Optional<User> userEntity = userReadRepository.getByNaturalIds(user.username(), user.email());
         userEntity.ifPresent(entity -> checkIncorrectParameter(user, entity));
-        return userRepository.createNew(UserEntity.of(user));
+        return userWriteRepository.createNew(UserEntity.of(user));
     }
 
     private void checkIncorrectParameter(User toCreate, User exists) {
@@ -41,8 +42,8 @@ class UserService implements IUserService {
     private void throwUserExistsByEmailException(Email email) {
         throw new UserAppException(
                 HttpStatus.BAD_REQUEST,
-                new ErrorCode("error.client.usernameExists"),
-                new ErrorSource("data/attributes/username"),
+                new ErrorCode("error.client.emailExists"),
+                new ErrorSource("data/attributes/email"),
                 List.of(new ErrorDetailParameter(email.value()))
         );
     }

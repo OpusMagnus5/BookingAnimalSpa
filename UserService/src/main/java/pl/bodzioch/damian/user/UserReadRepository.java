@@ -7,17 +7,17 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import pl.bodzioch.damian.valueobject.Email;
+import pl.bodzioch.damian.valueobject.UserId;
 import pl.bodzioch.damian.valueobject.Username;
 
 import java.util.Optional;
 
 @Slf4j
 @Repository
-class UserRepository implements IUserRepository {
+class UserReadRepository implements IUserReadRepository {
 
     @PersistenceContext
     EntityManager entityManager;
@@ -41,10 +41,10 @@ class UserRepository implements IUserRepository {
         }
     }
 
-    @Transactional
     @Override
-    public User createNew(UserEntity user) {
-        entityManager.persist(user);
-        return new User(user);
+    public Optional<User> findById(UserId userId) {
+        UserEntity userEntity = entityManager.find(UserEntity.class, userId.value());
+        return Optional.ofNullable(userEntity)
+                .map(User::new);
     }
 }

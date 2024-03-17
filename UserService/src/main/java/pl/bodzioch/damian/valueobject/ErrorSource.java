@@ -1,7 +1,16 @@
 package pl.bodzioch.damian.valueobject;
 
-import lombok.EqualsAndHashCode;
+import java.util.Objects;
 
-@EqualsAndHashCode(callSuper = false)
 public record ErrorSource(String value) {
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ErrorSource that = (ErrorSource) o;
+
+        return Objects.equals(value, that.value);
+    }
 }

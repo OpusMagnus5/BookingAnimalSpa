@@ -1,11 +1,9 @@
 package pl.bodzioch.damian.dto;
 
-import lombok.ToString;
 import pl.bodzioch.damian.exception.UserAppException;
 
 import java.io.Serializable;
 
-@ToString
 public record UserAppErrorResponse(
         String id,
         Integer status,
@@ -23,5 +21,17 @@ public record UserAppErrorResponse(
                 new AppErrorSource(e.getErrorSource().value()),
                 new ErrorMetaData(e.getErrorTime().value(), e.getRequestId().value().toString())
         );
+    }
+
+    @Override
+    public String toString() {
+        return "UserAppErrorResponse{" +
+                "id='" + id + '\'' +
+                ", status=" + status +
+                ", code='" + code + '\'' +
+                ", detail='" + detail + '\'' +
+                ", source=" + source +
+                ", meta=" + meta +
+                '}';
     }
 }

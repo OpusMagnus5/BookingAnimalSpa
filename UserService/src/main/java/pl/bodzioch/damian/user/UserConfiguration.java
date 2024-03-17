@@ -8,10 +8,16 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 class UserConfiguration {
 
-    private final IUserRepository userRepository;
+    private final IUserWriteRepository userWriteRepository;
+    private final IUserReadRepository userReadRepository;
 
     @Bean
-    IUserService userService() {
-        return new UserService(userRepository);
+    IWriteUserService writeUserService() {
+        return new WriteUserService(userWriteRepository, userReadRepository);
+    }
+
+    @Bean
+    IReadUserService readUserService() {
+        return new ReadUserService(userReadRepository);
     }
 }
