@@ -1,5 +1,9 @@
 package pl.bodzioch.damian.user;
 
+import pl.bodzioch.damian.command.CreateNewUserCommand;
+import pl.bodzioch.damian.dto.CreateUserDto;
+
 interface IWriteUserService {
-    User createNewUser(User user);
+
+    CreateUserDto handle(CreateNewUserCommand command);
 }

@@ -2,6 +2,8 @@ package pl.bodzioch.damian.user;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import pl.bodzioch.damian.command.CreateNewUserCommand;
+import pl.bodzioch.damian.dto.CreateUserDto;
 import pl.bodzioch.damian.exception.UserAppException;
 import pl.bodzioch.damian.utils.HttpStatus;
 import pl.bodzioch.damian.valueobject.*;
@@ -16,17 +18,18 @@ class WriteUserService implements IWriteUserService {
     private final IUserReadRepository userReadRepository;
 
     @Override
-    public User createNewUser(User user) {
-        Optional<User> userEntity = userReadRepository.getByNaturalIds(user.username(), user.email());
-        userEntity.ifPresent(entity -> checkIncorrectParameter(user, entity));
-        return userWriteRepository.createNew(UserEntity.of(user));
+    public CreateUserDto handle(CreateNewUserCommand command) {
+        Optional<User> user = userReadRepository.getByNaturalIds(command.username(), command.email());
+        user.ifPresent(entity -> checkIncorrectParameter(command, entity));
+        User createdUser = userWriteRepository.createNew(UserEntity.of(command));
+        return UserMapper.mapToCreateUserDto(createdUser);
     }
 
-    private void checkIncorrectParameter(User toCreate, User exists) {
-        if (toCreate.username().equals(exists.username())) {
-            throwUserExistsByUsernameException(toCreate.username());
-        } else if (toCreate.email().equals(exists.email())) {
-            throwUserExistsByEmailException(toCreate.email());
+    private void checkIncorrectParameter(CreateNewUserCommand command, User exists) {
+        if (command.username().equals(exists.username())) {
+            throwUserExistsByUsernameException(command.username());
+        } else if (command.email().equals(exists.email())) {
+            throwUserExistsByEmailException(command.email());
         }
     }
 

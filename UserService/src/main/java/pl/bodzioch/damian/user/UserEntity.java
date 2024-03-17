@@ -5,6 +5,7 @@ import lombok.*;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.OptimisticLocking;
 import org.hibernate.generator.EventType;
+import pl.bodzioch.damian.command.CreateNewUserCommand;
 import pl.bodzioch.damian.utils.GeneratedUuidValue;
 import pl.bodzioch.damian.utils.UserEncoder;
 
@@ -55,14 +56,14 @@ class UserEntity {
     @Column(name = "modify_time")
     private LocalDateTime modifyTime;
 
-    static UserEntity of(User user) {
+    static UserEntity of(CreateNewUserCommand command) {
         return UserEntity.builder()
-                .username(user.username().value())
-                .password(UserEncoder.encodePassword(user.password()))
-                .email(user.email().value())
-                .city(user.city().value())
-                .country(user.country().value().getCountry())
-                .phoneNumber(user.phoneNumber().value())
+                .username(command.username().value())
+                .password(UserEncoder.encodePassword(command.password()))
+                .email(command.email().value())
+                .city(command.city().value())
+                .country(command.country().value().getCountry())
+                .phoneNumber(command.phoneNumber().value())
                 .build();
     }
 }

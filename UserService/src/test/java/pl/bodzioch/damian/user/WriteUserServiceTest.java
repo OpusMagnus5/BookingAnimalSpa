@@ -6,6 +6,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.slf4j.MDC;
+import pl.bodzioch.damian.command.CreateNewUserCommand;
+import pl.bodzioch.damian.command.FindUserByIdCommand;
+import pl.bodzioch.damian.dto.CreateUserDto;
+import pl.bodzioch.damian.dto.ReadUserDto;
 import pl.bodzioch.damian.exception.UserAppException;
 import pl.bodzioch.damian.utils.HttpStatus;
 import pl.bodzioch.damian.valueobject.*;
@@ -22,6 +26,7 @@ class WriteUserServiceTest {
             new TestUserWriteRepository(), new TestUserReadRepository()
     );
     private final IWriteUserService writeUserService = userConfiguration.writeUserService();
+    private final IReadUserService readUserService = userConfiguration.readUserService();
     private static MockedStatic<MDC> mdcMocked;
 
     @BeforeAll
@@ -40,11 +45,11 @@ class WriteUserServiceTest {
         Username username = new Username("user1");
         Email email1 = new Email("email1");
         Email email2 = new Email("email2");
-        User user1 = buildUser(username, email1);
-        User user2 = buildUser(username, email2);
-        writeUserService.createNewUser(user1);
+        CreateNewUserCommand user1 = buildCreateUserCommand(username, email1);
+        CreateNewUserCommand user2 = buildCreateUserCommand(username, email2);
+        writeUserService.handle(user1);
 
-        UserAppException exception = assertThrows(UserAppException.class, () -> writeUserService.createNewUser(user2));
+        UserAppException exception = assertThrows(UserAppException.class, () -> writeUserService.handle(user2));
         assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
         assertEquals(new ErrorCode("error.client.usernameExists"), exception.getErrorCode());
         assertEquals(new ErrorSource("data/attributes/username"), exception.getErrorSource());
@@ -57,11 +62,11 @@ class WriteUserServiceTest {
         Username username1 = new Username("user1");
         Username username2 = new Username("user2");
         Email email = new Email("email1");
-        User user1 = buildUser(username1, email);
-        User user2 = buildUser(username2, email);
-        writeUserService.createNewUser(user1);
+        CreateNewUserCommand user1Command = buildCreateUserCommand(username1, email);
+        CreateNewUserCommand user2Command = buildCreateUserCommand(username2, email);
+        writeUserService.handle(user1Command);
 
-        UserAppException exception = assertThrows(UserAppException.class, () -> writeUserService.createNewUser(user2));
+        UserAppException exception = assertThrows(UserAppException.class, () -> writeUserService.handle(user2Command));
         assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
         assertEquals(new ErrorCode("error.client.emailExists"), exception.getErrorCode());
         assertEquals(new ErrorSource("data/attributes/email"), exception.getErrorSource());
@@ -71,13 +76,18 @@ class WriteUserServiceTest {
 
     @Test
     void Create_new_user_When_user_is_not_exists() {
-        User user = buildUser(new Username("user"), new Email("email"));
-        assertDoesNotThrow(() -> writeUserService.createNewUser(user));
+        CreateNewUserCommand createUserCommand = buildCreateUserCommand(new Username("user"), new Email("email"));
+        CreateUserDto createdUser = assertDoesNotThrow(() -> writeUserService.handle(createUserCommand));
         assertNotNull(writeUserService);
+
+        FindUserByIdCommand findUserCommand = new FindUserByIdCommand(createdUser.id());
+        ReadUserDto readUser = readUserService.handle(findUserCommand);
+        assertNotNull(readUser);
+        assertEquals(createdUser.id(), readUser.id());
     }
 
-    private User buildUser(Username username, Email email) {
-        return new User(
+    private CreateNewUserCommand buildCreateUserCommand(Username username, Email email) {
+        return new CreateNewUserCommand(
                 username,
                 new Password("password"),
                 email,
