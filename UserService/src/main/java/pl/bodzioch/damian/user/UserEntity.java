@@ -1,11 +1,12 @@
 package pl.bodzioch.damian.user;
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.OptimisticLocking;
 import org.hibernate.generator.EventType;
 import pl.bodzioch.damian.utils.GeneratedUuidValue;
+import pl.bodzioch.damian.utils.UserEncoder;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -13,6 +14,9 @@ import java.util.UUID;
 @Entity(name = "users")
 @OptimisticLocking
 @Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 class UserEntity {
 
     @Id
@@ -49,4 +53,15 @@ class UserEntity {
 
     @Column(name = "modify_time")
     private LocalDateTime modifyTime;
+
+    static UserEntity of(User user) {
+        return UserEntity.builder()
+                .username(user.username().value())
+                .password(UserEncoder.encodePassword(user.password()))
+                .email(user.email().value())
+                .city(user.city().value())
+                .country(user.country().value().getCountry())
+                .phoneNumber(user.phoneNumber().value())
+                .build();
+    }
 }

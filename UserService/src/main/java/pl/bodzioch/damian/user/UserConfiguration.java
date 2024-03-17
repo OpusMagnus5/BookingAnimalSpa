@@ -6,12 +6,12 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @RequiredArgsConstructor
-class UserAppConfiguration {
+class UserConfiguration {
 
-    private final UserRepository userRepository;
+    private final IUserRepository userRepository;
 
     @Bean
-    UserService userService() {
+    IUserService userService() {
         return new UserService(userRepository);
     }
 }
