@@ -7,7 +7,7 @@ CREATE TABLE users (
     email VARCHAR UNIQUE NOT NULL,
     city VARCHAR NOT NULL,
     country VARCHAR NOT NULL,
-    phone_number VARCHAR NOT NULL,
+    phone_number VARCHAR UNIQUE NOT NULL,
     create_time TIMESTAMP NOT NULL,
     modify_time TIMESTAMP
 );
