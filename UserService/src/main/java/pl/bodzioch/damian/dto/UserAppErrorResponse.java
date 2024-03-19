@@ -12,6 +12,7 @@ public record UserAppErrorResponse(
         AppErrorSource source,
         ErrorMetaData meta
 ) implements Serializable {
+
     public UserAppErrorResponse(UserAppException e, String errorDetail) {
         this(
                 e.getErrorId().value().toString(),

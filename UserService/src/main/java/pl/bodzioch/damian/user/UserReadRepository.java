@@ -21,7 +21,7 @@ import java.util.Optional;
 class UserReadRepository implements IUserReadRepository {
 
     @PersistenceContext
-    EntityManager entityManager;
+    private EntityManager entityManager;
 
     @Override
     public Optional<User> getByNaturalIds(Username username, Email email, PhoneNumber phoneNumber) {

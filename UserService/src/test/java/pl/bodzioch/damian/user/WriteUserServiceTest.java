@@ -80,12 +80,4 @@ class WriteUserServiceTest {
         assertEquals(exception.getParameters().size(), 1);
         assertTrue(exception.getParameters().contains(new ErrorDetailParameter(phoneNumber.value())));
     }
-
-    private ValidateNewUserData buildCreateUserCommand(Username username, Email email, PhoneNumber phoneNumber) {
-        return new ValidateNewUserData(
-                username,
-                email,
-                phoneNumber
-        );
-    }
 }
