@@ -3,14 +3,17 @@ package pl.bodzioch.damian.user;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import pl.bodzioch.damian.command.CreateNewUserCommand;
+import pl.bodzioch.damian.dto.UserDto;
 
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 class WriteUserService implements IWriteUserService {
 
     private final IUserWriteRepository userWriteRepository;
 
-    User handle(CreateNewUserCommand command) {
-        return userWriteRepository.createNew(new UserEntity(command));
+    @Override
+    public UserDto handle(CreateNewUserCommand command) {
+        User user = userWriteRepository.createNew(new UserEntity(command));
+        return UserMapper.mapToUserDto(user);
         //TODO wyslac maila
     }
 }

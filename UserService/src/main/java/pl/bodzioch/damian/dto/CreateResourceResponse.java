@@ -6,9 +6,10 @@ public record CreateResourceResponse(
         RelationshipsDto relationships
 ) {
 
-    public CreateResourceResponse(CreateUserDto createUserDto) {
+    public CreateResourceResponse(UserDto userDto) {
         this(
-                new DataDto()
-        )
+                new DataDto(userDto),
+                null
+        );
     }
 }

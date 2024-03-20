@@ -6,9 +6,10 @@ public record DataDto(
         AttributesDto attributes
 ) {
 
-    public DataDto(User user) {
+    public DataDto(UserDto user) {
         this(
-                user.getFullName()
-        )
+                UserDto.TYPE,
+                new AttributesDto(user)
+        );
     }
 }

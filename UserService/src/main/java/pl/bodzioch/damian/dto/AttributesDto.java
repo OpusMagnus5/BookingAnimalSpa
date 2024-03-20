@@ -13,4 +13,17 @@ public record AttributesDto(
         LocalDateTime modifyTime
 
 ) {
+
+    public AttributesDto(UserDto userDto) {
+        this(
+                userDto.id().value(),
+                userDto.username().value(),
+                userDto.email().value(),
+                userDto.city().value(),
+                userDto.country().value().getCountry(),
+                userDto.phoneNumber().value(),
+                userDto.createTime().value(),
+                userDto.modifyTime().value()
+        );
+    }
 }

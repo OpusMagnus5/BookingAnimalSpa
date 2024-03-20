@@ -2,7 +2,7 @@ package pl.bodzioch.damian.dto;
 
 import pl.bodzioch.damian.valueobject.*;
 
-public record CreateUserDto(
+public record UserDto(
         UserId id,
         Username username,
         Email email,
@@ -12,4 +12,5 @@ public record CreateUserDto(
         CreateTime createTime,
         ModifyTime modifyTime
 ) {
+    public static final String TYPE = "user";
 }

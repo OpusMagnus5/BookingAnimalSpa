@@ -6,11 +6,13 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.slf4j.MDC;
+import pl.bodzioch.damian.command.CreateNewUserCommand;
 import pl.bodzioch.damian.command.ValidateNewUserData;
 import pl.bodzioch.damian.exception.UserAppException;
 import pl.bodzioch.damian.utils.HttpStatus;
 import pl.bodzioch.damian.valueobject.*;
 
+import java.util.Locale;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,9 +41,9 @@ class WriteUserServiceTest {
     @Test
     void Create_new_user_When_user_with_username_exists() {
         Username username = new Username("user1");
-        ValidateNewUserData user1 = buildCreateUserCommand(username, new Email("email1"), new PhoneNumber("1"));
-        ValidateNewUserData user2 = buildCreateUserCommand(username, new Email("email2"), new PhoneNumber("2"));
-        readUserService.handle(user1);
+        CreateNewUserCommand user1 = buildWriteCommand(username, new Email("email1"), new PhoneNumber("1"));
+        ValidateNewUserData user2 = buildValidateCommand(username, new Email("email2"), new PhoneNumber("2"));
+        writeUserService.handle(user1);
 
         UserAppException exception = assertThrows(UserAppException.class, () -> readUserService.handle(user2));
         assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
@@ -54,9 +56,9 @@ class WriteUserServiceTest {
     @Test
     void Create_new_user_When_user_with_email_exists() {
         Email email = new Email("email1");
-        ValidateNewUserData user1Command = buildCreateUserCommand(new Username("user1"), email, new PhoneNumber("1"));
-        ValidateNewUserData user2Command = buildCreateUserCommand(new Username("user2"), email, new PhoneNumber("2"));
-        readUserService.handle(user1Command);
+        CreateNewUserCommand user1Command = buildWriteCommand(new Username("user1"), email, new PhoneNumber("1"));
+        ValidateNewUserData user2Command = buildValidateCommand(new Username("user2"), email, new PhoneNumber("2"));
+        writeUserService.handle(user1Command);
 
         UserAppException exception = assertThrows(UserAppException.class, () -> readUserService.handle(user2Command));
         assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
@@ -69,9 +71,9 @@ class WriteUserServiceTest {
     @Test
     void Create_new_user_When_user_with_phone_exists() {
         PhoneNumber phoneNumber = new PhoneNumber("1");
-        ValidateNewUserData user1Command = buildCreateUserCommand(new Username("user1"), new Email("email1"), phoneNumber);
-        ValidateNewUserData user2Command = buildCreateUserCommand(new Username("user2"), new Email("email2"), phoneNumber);
-        readUserService.handle(user1Command);
+        CreateNewUserCommand user1Command = buildWriteCommand(new Username("user1"), new Email("email1"), phoneNumber);
+        ValidateNewUserData user2Command = buildValidateCommand(new Username("user2"), new Email("email2"), phoneNumber);
+        writeUserService.handle(user1Command);
 
         UserAppException exception = assertThrows(UserAppException.class, () -> readUserService.handle(user2Command));
         assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
@@ -79,5 +81,25 @@ class WriteUserServiceTest {
         assertEquals(new ErrorSource("data/attributes/phoneNumber"), exception.getErrorSource());
         assertEquals(exception.getParameters().size(), 1);
         assertTrue(exception.getParameters().contains(new ErrorDetailParameter(phoneNumber.value())));
+    }
+
+    private CreateNewUserCommand buildWriteCommand(Username user1, Email email1, PhoneNumber phoneNumber) {
+        return new CreateNewUserCommand(
+                user1,
+                new Password("password"),
+                email1,
+                phoneNumber,
+                new City("city"),
+                new Country(Locale.UK)
+        );
+    }
+
+    private ValidateNewUserData buildValidateCommand(Username user, Email email, PhoneNumber phoneNumber) {
+        return new ValidateNewUserData(
+                user,
+                email,
+                phoneNumber,
+                new SmsRequired(false)
+        );
     }
 }

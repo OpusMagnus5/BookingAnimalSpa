@@ -8,6 +8,7 @@ CREATE TABLE users (
     city VARCHAR NOT NULL,
     country VARCHAR NOT NULL,
     phone_number VARCHAR UNIQUE NOT NULL,
+    active BOOLEAN NOT NULL,
     create_time TIMESTAMP NOT NULL,
     modify_time TIMESTAMP
 );

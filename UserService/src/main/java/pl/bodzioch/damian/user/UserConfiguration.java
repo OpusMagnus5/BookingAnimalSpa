@@ -13,7 +13,7 @@ class UserConfiguration {
 
     @Bean
     IWriteUserService writeUserService() {
-        return new WriteUserService(userWriteRepository, userReadRepository);
+        return new WriteUserService(userWriteRepository);
     }
 
     @Bean

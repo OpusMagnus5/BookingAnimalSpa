@@ -63,6 +63,7 @@ class UserEntity {
         username = command.username().value();
         password= UserEncoder.encodePassword(command.password());
         email = command.email().value();
+        phoneNumber = command.phoneNumber().value();
         city = command.city().value();
         country = command.country().value().getCountry();
         isActive = false;
