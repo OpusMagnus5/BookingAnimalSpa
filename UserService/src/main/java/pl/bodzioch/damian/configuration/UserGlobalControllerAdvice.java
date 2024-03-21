@@ -27,6 +27,7 @@ class UserGlobalControllerAdvice {
     ResponseEntity<UserAppErrorResponse> handleUserAppException(Exception e) {
         log.error(e.getMessage(), e);
         UserAppException generalError = UserAppException.getGeneralError();
+        log.error(e.getMessage(), e);
         return getResponseEntity(generalError, messageSource);
     }
 

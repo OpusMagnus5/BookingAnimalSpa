@@ -27,13 +27,20 @@ public class UserAppException extends RuntimeException {
     private final RequestId requestId = new RequestId(UUID.fromString(MDC.get(REQUEST_ID_MDC_PARAM)));
     private final List<ErrorDetailParameter> parameters;
 
-
-
     public static UserAppException getGeneralError() {
         return new UserAppException(
                 HttpStatus.INTERNAL_SERVER_ERROR,
                 new ErrorCode(GENERAL_ERROR_CODE),
                 null,
+                Collections.emptyList()
+        );
+    }
+
+    public UserAppException(HttpStatus httpStatus, ErrorCode errorCode, ErrorSource errorSource) {
+        this(
+                httpStatus,
+                errorCode,
+                errorSource,
                 Collections.emptyList()
         );
     }
