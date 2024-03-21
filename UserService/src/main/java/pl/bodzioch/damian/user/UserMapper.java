@@ -2,7 +2,7 @@ package pl.bodzioch.damian.user;
 
 import pl.bodzioch.damian.dto.UserDto;
 
-public class UserMapper {
+class UserMapper {
 
     static UserDto mapToUserDto(User user) {
         return new UserDto(
