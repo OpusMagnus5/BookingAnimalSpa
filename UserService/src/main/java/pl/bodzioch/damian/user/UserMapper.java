@@ -8,6 +8,7 @@ public class UserMapper {
         return new UserDto(
                 user.id(),
                 user.username(),
+                user.password(),
                 user.email(),
                 user.phoneNumber(),
                 user.city(),

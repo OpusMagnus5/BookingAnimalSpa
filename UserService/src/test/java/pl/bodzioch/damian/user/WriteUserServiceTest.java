@@ -8,8 +8,10 @@ import org.mockito.Mockito;
 import org.slf4j.MDC;
 import pl.bodzioch.damian.command.CreateNewUserCommand;
 import pl.bodzioch.damian.command.ValidateNewUserData;
+import pl.bodzioch.damian.dto.UserDto;
 import pl.bodzioch.damian.exception.UserAppException;
 import pl.bodzioch.damian.utils.HttpStatus;
+import pl.bodzioch.damian.utils.UserEncoder;
 import pl.bodzioch.damian.valueobject.*;
 
 import java.util.Locale;
@@ -43,7 +45,7 @@ class WriteUserServiceTest {
         Username username = new Username("user1");
         CreateNewUserCommand user1 = buildWriteCommand(username, new Email("email1"), new PhoneNumber("1"));
         ValidateNewUserData user2 = buildValidateCommand(username, new Email("email2"), new PhoneNumber("2"));
-        writeUserService.handle(user1);
+        assertDoesNotThrow(() -> writeUserService.handle(user1));
 
         UserAppException exception = assertThrows(UserAppException.class, () -> readUserService.handle(user2));
         assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
@@ -58,7 +60,7 @@ class WriteUserServiceTest {
         Email email = new Email("email1");
         CreateNewUserCommand user1Command = buildWriteCommand(new Username("user1"), email, new PhoneNumber("1"));
         ValidateNewUserData user2Command = buildValidateCommand(new Username("user2"), email, new PhoneNumber("2"));
-        writeUserService.handle(user1Command);
+        assertDoesNotThrow(() -> writeUserService.handle(user1Command));
 
         UserAppException exception = assertThrows(UserAppException.class, () -> readUserService.handle(user2Command));
         assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
@@ -73,7 +75,7 @@ class WriteUserServiceTest {
         PhoneNumber phoneNumber = new PhoneNumber("1");
         CreateNewUserCommand user1Command = buildWriteCommand(new Username("user1"), new Email("email1"), phoneNumber);
         ValidateNewUserData user2Command = buildValidateCommand(new Username("user2"), new Email("email2"), phoneNumber);
-        writeUserService.handle(user1Command);
+        assertDoesNotThrow(() -> writeUserService.handle(user1Command));
 
         UserAppException exception = assertThrows(UserAppException.class, () -> readUserService.handle(user2Command));
         assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
@@ -81,6 +83,22 @@ class WriteUserServiceTest {
         assertEquals(new ErrorSource("data/attributes/phoneNumber"), exception.getErrorSource());
         assertEquals(exception.getParameters().size(), 1);
         assertTrue(exception.getParameters().contains(new ErrorDetailParameter(phoneNumber.value())));
+    }
+
+    @Test
+    void Create_new_user_When_data_are_valid() {
+        CreateNewUserCommand user1Command = buildWriteCommand(new Username("user1"), new Email("email1"), new PhoneNumber("1"));
+        CreateNewUserCommand user2Command = buildWriteCommand(new Username("user2"), new Email("email2"), new PhoneNumber("2"));
+        assertDoesNotThrow(() -> writeUserService.handle(user1Command));
+
+        UserDto userDto = assertDoesNotThrow(() -> writeUserService.handle(user2Command));
+        assertNotNull(userDto);
+        assertEquals(user2Command.username(), userDto.username());
+        assertTrue(UserEncoder.matches(user2Command.password().value(), userDto.password().value()));
+        assertEquals(user2Command.email(), userDto.email());
+        assertEquals(user2Command.phoneNumber(), userDto.phoneNumber());
+        assertEquals(user2Command.city(), userDto.city());
+        assertEquals(user2Command.country(), userDto.country());
     }
 
     private CreateNewUserCommand buildWriteCommand(Username user1, Email email1, PhoneNumber phoneNumber) {

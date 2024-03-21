@@ -11,4 +11,8 @@ public class UserEncoder {
     public static String encodePassword(Password password) {
         return bcryptEncoder.encode(password.value());
     }
+
+    public static boolean matches(String rawData, String hashedData) {
+        return bcryptEncoder.matches(rawData, hashedData);
+    }
 }

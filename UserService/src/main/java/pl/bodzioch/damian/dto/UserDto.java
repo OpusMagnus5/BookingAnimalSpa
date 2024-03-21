@@ -5,6 +5,7 @@ import pl.bodzioch.damian.valueobject.*;
 public record UserDto(
         UserId id,
         Username username,
+        Password password,
         Email email,
         PhoneNumber phoneNumber,
         City city,
