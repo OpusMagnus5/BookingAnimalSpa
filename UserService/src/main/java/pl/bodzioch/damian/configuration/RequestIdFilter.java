@@ -4,10 +4,12 @@ import com.fasterxml.uuid.Generators;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import org.slf4j.MDC;
+import org.springframework.stereotype.Component;
 import pl.bodzioch.damian.exception.UserAppException;
 
 import java.io.IOException;
 
+@Component
 @WebFilter("/api/*")
 class RequestIdFilter implements Filter {
 

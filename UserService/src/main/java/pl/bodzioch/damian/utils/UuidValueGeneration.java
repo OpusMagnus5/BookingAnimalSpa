@@ -8,7 +8,7 @@ import org.hibernate.generator.EventTypeSets;
 
 import java.util.EnumSet;
 
-class UuidValueGeneration implements BeforeExecutionGenerator {
+public class UuidValueGeneration implements BeforeExecutionGenerator {
 
     private final EnumSet<EventType> eventTypes;
 

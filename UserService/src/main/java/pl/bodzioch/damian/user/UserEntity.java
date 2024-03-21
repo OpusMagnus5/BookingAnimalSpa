@@ -2,8 +2,10 @@ package pl.bodzioch.damian.user;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.NaturalId;
 import org.hibernate.annotations.OptimisticLocking;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.generator.EventType;
 import pl.bodzioch.damian.command.CreateNewUserCommand;
 import pl.bodzioch.damian.utils.GeneratedUuidValue;
@@ -21,8 +23,8 @@ import java.util.UUID;
 class UserEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "client_id_gen")
-    @SequenceGenerator(name = "client_id_gen", sequenceName = "client_id_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_id_gen")
+    @SequenceGenerator(name = "users_id_gen", sequenceName = "users_id_seq")
     @Setter(AccessLevel.PROTECTED)
     private Long id;
 
@@ -44,19 +46,22 @@ class UserEntity {
 
     private String country;
 
-    @Column(name = "telephone_number")
+    @NaturalId
+    @Column(name = "phone_number")
     private String phoneNumber;
 
     @Column(name = "active")
     private Boolean isActive;
 
-    @Column(name = "company_id")
-    private Long companyId;
+//    @Column(name = "company_id")
+//    private Long companyId;
 
     @Column(name = "create_time")
+    @CreationTimestamp
     private LocalDateTime createTime;
 
     @Column(name = "modify_time")
+    @UpdateTimestamp
     private LocalDateTime modifyTime;
 
     protected UserEntity(CreateNewUserCommand command) {
@@ -65,7 +70,7 @@ class UserEntity {
         email = command.email().value();
         phoneNumber = command.phoneNumber().value();
         city = command.city().value();
-        country = command.country().value().getCountry();
+        country = command.country().value().getLanguage().toUpperCase();
         isActive = false;
     }
 

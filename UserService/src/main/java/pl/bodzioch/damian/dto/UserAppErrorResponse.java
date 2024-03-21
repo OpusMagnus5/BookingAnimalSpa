@@ -1,8 +1,10 @@
 package pl.bodzioch.damian.dto;
 
 import pl.bodzioch.damian.exception.UserAppException;
+import pl.bodzioch.damian.valueobject.ErrorSource;
 
 import java.io.Serializable;
+import java.util.Optional;
 
 public record UserAppErrorResponse(
         String id,
@@ -19,7 +21,7 @@ public record UserAppErrorResponse(
                 e.getHttpStatus().getCode(),
                 e.getErrorCode().value(),
                 errorDetail,
-                new AppErrorSource(e.getErrorSource().value()),
+                Optional.ofNullable(e.getErrorSource()).map(ErrorSource::value).map(AppErrorSource::new).orElse(null),
                 new ErrorMetaData(e.getErrorTime().value(), e.getRequestId().value().toString())
         );
     }

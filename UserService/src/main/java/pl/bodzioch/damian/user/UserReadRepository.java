@@ -31,7 +31,7 @@ class UserReadRepository implements IUserReadRepository {
         query.select(root);
         Predicate usernamePredicate = builder.equal(root.get("username"), username.value());
         Predicate emailPredicate = builder.equal(root.get("email"), email.value());
-        Predicate phonePredicate = builder.equal(root.get("phone_number"), phoneNumber.value());
+        Predicate phonePredicate = builder.equal(root.get("phoneNumber"), phoneNumber.value());
         Predicate usernameOrEmail = builder.or(usernamePredicate, emailPredicate, phonePredicate);
         query.where(usernameOrEmail);
         try {
