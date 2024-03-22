@@ -11,6 +11,8 @@ class UserMapper {
                 user.password(),
                 user.email(),
                 user.phoneNumber(),
+                user.firstName(),
+                user.lastName(),
                 user.city(),
                 user.country(),
                 user.createTime(),

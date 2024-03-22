@@ -10,6 +10,8 @@ public record CreateNewUserCommand(
         Password password,
         Email email,
         PhoneNumber phoneNumber,
+        FirstName firstName,
+        LastName lastName,
         City city,
         Country country
 ) {
@@ -20,6 +22,8 @@ public record CreateNewUserCommand(
                 new Password(request.password()),
                 new Email(request.email()),
                 new PhoneNumber(request.phoneNumber()),
+                new FirstName(request.firstName()),
+                new LastName(request.lastName()),
                 new City(request.city()),
                 new Country(Locale.of(request.country()))
         );

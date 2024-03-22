@@ -8,6 +8,8 @@ public record UserDto(
         Password password,
         Email email,
         PhoneNumber phoneNumber,
+        FirstName firstName,
+        LastName lastName,
         City city,
         Country country,
         CreateTime createTime,

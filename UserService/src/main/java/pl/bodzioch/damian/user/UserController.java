@@ -22,7 +22,7 @@ class UserController {
     private final IReadUserService readUserService;
     private final IWriteUserService writeUserService;
 
-    //TODO dodać linki do resposne, poprawić requesty wq json API
+    //TODO dodać linki do resposne
     @ResponseStatus(HttpStatus.OK)
     @PostMapping(APPROVE_NEW)
     void approveNewUserData(@Valid @RequestBody CheckNewUserDataRequest request) {

@@ -5,6 +5,8 @@ CREATE TABLE users (
     username VARCHAR UNIQUE NOT NULL,
     password VARCHAR NOT NULL,
     email VARCHAR UNIQUE NOT NULL,
+    first_name VARCHAR NOT NULL,
+    last_name VARCHAR NOT NULL,
     city VARCHAR NOT NULL,
     country VARCHAR NOT NULL,
     phone_number VARCHAR UNIQUE NOT NULL,
@@ -14,3 +16,7 @@ CREATE TABLE users (
 );
 
 ALTER SEQUENCE users_id_seq INCREMENT BY 50;
+CREATE UNIQUE INDEX users_id_idx ON users (id);
+CREATE UNIQUE INDEX users_username_idx ON users (username);
+CREATE UNIQUE INDEX users_email_idx ON users (email);
+CREATE UNIQUE INDEX users_phone_number_idx ON users (phone_number);

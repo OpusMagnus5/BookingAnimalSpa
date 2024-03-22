@@ -97,6 +97,8 @@ class WriteUserServiceTest {
         assertTrue(UserEncoder.matches(user2Command.password().value(), userDto.password().value()));
         assertEquals(user2Command.email(), userDto.email());
         assertEquals(user2Command.phoneNumber(), userDto.phoneNumber());
+        assertEquals(user2Command.firstName(), userDto.firstName());
+        assertEquals(user2Command.lastName(), userDto.lastName());
         assertEquals(user2Command.city(), userDto.city());
         assertEquals(user2Command.country(), userDto.country());
     }
@@ -107,6 +109,8 @@ class WriteUserServiceTest {
                 new Password("password"),
                 email1,
                 phoneNumber,
+                new FirstName("firstName"),
+                new LastName("lastName"),
                 new City("city"),
                 new Country(Locale.UK)
         );
