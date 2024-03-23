@@ -15,6 +15,7 @@ class UserMapper {
                 user.lastName(),
                 user.city(),
                 user.country(),
+                user.isActive(),
                 user.createTime(),
                 user.modifyTime()
         );

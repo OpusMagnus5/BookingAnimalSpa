@@ -17,6 +17,8 @@ class UserWriteRepository implements IUserWriteRepository {
     @Override
     public User createNew(UserEntity user) {
         entityManager.persist(user);
+        entityManager.flush();
+        entityManager.clear();
         return new User(user);
     }
 }

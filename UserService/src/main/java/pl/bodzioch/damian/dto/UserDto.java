@@ -12,6 +12,7 @@ public record UserDto(
         LastName lastName,
         City city,
         Country country,
+        IsActive active,
         CreateTime createTime,
         ModifyTime modifyTime
 ) {

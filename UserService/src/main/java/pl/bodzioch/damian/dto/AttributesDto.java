@@ -11,6 +11,7 @@ public record AttributesDto(
         String city,
         String country,
         String phoneNumber,
+        Boolean active,
         LocalDateTime createTime,
         LocalDateTime modifyTime
 
@@ -24,8 +25,9 @@ public record AttributesDto(
                 userDto.firstName().value(),
                 userDto.lastName().value(),
                 userDto.city().value(),
-                userDto.country().value().getCountry(),
+                userDto.country().value().getLanguage().toUpperCase(),
                 userDto.phoneNumber().value(),
+                userDto.active().value(),
                 userDto.createTime().value(),
                 userDto.modifyTime().value()
         );
