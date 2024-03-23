@@ -43,6 +43,11 @@
                 <artifactId>spring-cloud-config-server</artifactId>
                 <version>${spring.cloud.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-webflux</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
             <!--SPRING_CLOUD-->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>

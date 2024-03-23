@@ -5,14 +5,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import pl.bodzioch.damian.dto.ErrorDto;
 import pl.bodzioch.damian.dto.UserAppErrorResponse;
 import pl.bodzioch.damian.exception.UserAppException;
 import pl.bodzioch.damian.valueobject.ErrorDetailParameter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Order(2)
@@ -32,11 +38,16 @@ class UserGlobalControllerAdvice {
     }
 
     static ResponseEntity<UserAppErrorResponse> getResponseEntity(UserAppException exception, MessageSource messageSource) {
-        String errorCode = exception.getErrorCode().value();
-        Object[] messageParams = exception.getParameters().stream().map(ErrorDetailParameter::value).toArray();
-        String errorDetail = messageSource.getMessage(errorCode, messageParams, LocaleContextHolder.getLocale());
-        UserAppErrorResponse response = new UserAppErrorResponse(exception, errorDetail);
+        List<ErrorDto> errorsDto = new ArrayList<>();
+        exception.getErrors().forEach(e -> {
+            String errorCode = e.errorCode().value();
+            Object[] messageParams = e.parameters().stream().map(ErrorDetailParameter::value).toArray();
+            String errorDetail = messageSource.getMessage(errorCode, messageParams, LocaleContextHolder.getLocale());
+            errorsDto.add(new ErrorDto(e, errorDetail, exception.getRequestId()));
+        });
+
         return ResponseEntity.status(exception.getHttpStatus().getCode())
-                .body(response);
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON.toString())
+                .body(new UserAppErrorResponse(errorsDto));
     }
 }

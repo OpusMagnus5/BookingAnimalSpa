@@ -1,7 +1,8 @@
 package pl.bodzioch.damian.dto;
 
-import pl.bodzioch.damian.exception.UserAppException;
+import pl.bodzioch.damian.valueobject.ErrorData;
 import pl.bodzioch.damian.valueobject.ErrorSource;
+import pl.bodzioch.damian.valueobject.RequestId;
 
 import java.util.Optional;
 
@@ -14,14 +15,14 @@ public record ErrorDto(
         ErrorMetaData meta
 ) {
 
-    public ErrorDto(UserAppException e, String errorDetail) {
+    public ErrorDto(ErrorData e, String errorDetail, RequestId requestId) {
         this(
-                e.getErrorId().value().toString(),
-                e.getHttpStatus().getCode(),
-                e.getErrorCode().value(),
+                e.errorId().value().toString(),
+                e.httpStatus().getCode(),
+                e.errorCode().value(),
                 errorDetail,
-                Optional.ofNullable(e.getErrorSource()).map(ErrorSource::value).map(AppErrorSource::new).orElse(null),
-                new ErrorMetaData(e.getErrorTime().value(), e.getRequestId().value().toString())
+                Optional.ofNullable(e.errorSource()).map(ErrorSource::value).map(AppErrorSource::new).orElse(null),
+                new ErrorMetaData(e.errorTime().value(), requestId.value().toString())
         );
     }
 

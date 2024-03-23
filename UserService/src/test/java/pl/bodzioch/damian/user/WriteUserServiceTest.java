@@ -14,6 +14,7 @@ import pl.bodzioch.damian.utils.HttpStatus;
 import pl.bodzioch.damian.utils.UserEncoder;
 import pl.bodzioch.damian.valueobject.*;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -41,48 +42,40 @@ class WriteUserServiceTest {
     }
 
     @Test
-    void Create_new_user_When_user_with_username_exists() {
-        Username username = new Username("user1");
-        CreateNewUserCommand user1 = buildWriteCommand(username, new Email("email1"), new PhoneNumber("1"));
-        ValidateNewUserData user2 = buildValidateCommand(username, new Email("email2"), new PhoneNumber("2"));
+    void Validate_new_user_When_user_with_all_unique_data_exists() {
+        Username username = new Username("user");
+        Email email = new Email("email");
+        PhoneNumber phone = new PhoneNumber("1");
+        CreateNewUserCommand user1 = buildWriteCommand(username, email, phone);
+        ValidateNewUserData user2 = buildValidateCommand(username, email, phone);
         assertDoesNotThrow(() -> writeUserService.handle(user1));
 
         UserAppException exception = assertThrows(UserAppException.class, () -> readUserService.handle(user2));
         assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
-        assertEquals(new ErrorCode("error.client.usernameExists"), exception.getErrorCode());
-        assertEquals(new ErrorSource("data/attributes/username"), exception.getErrorSource());
-        assertEquals(exception.getParameters().size(), 1);
-        assertTrue(exception.getParameters().contains(new ErrorDetailParameter(username.value())));
-    }
+        assertNotNull(exception.getErrorId());
+        List<ErrorData> errors = exception.getErrors();
+        assertEquals(3, errors.size());
 
-    @Test
-    void Create_new_user_When_user_with_email_exists() {
-        Email email = new Email("email1");
-        CreateNewUserCommand user1Command = buildWriteCommand(new Username("user1"), email, new PhoneNumber("1"));
-        ValidateNewUserData user2Command = buildValidateCommand(new Username("user2"), email, new PhoneNumber("2"));
-        assertDoesNotThrow(() -> writeUserService.handle(user1Command));
+        ErrorData firstError = errors.getFirst();
+        assertEquals(HttpStatus.BAD_REQUEST, firstError.httpStatus());
+        assertEquals(new ErrorCode("error.client.usernameExists"), firstError.errorCode());
+        assertEquals(new ErrorSource("data/attributes/username"), firstError.errorSource());
+        assertEquals(firstError.parameters().size(), 1);
+        assertTrue(firstError.parameters().contains(new ErrorDetailParameter(username.value())));
 
-        UserAppException exception = assertThrows(UserAppException.class, () -> readUserService.handle(user2Command));
-        assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
-        assertEquals(new ErrorCode("error.client.emailExists"), exception.getErrorCode());
-        assertEquals(new ErrorSource("data/attributes/email"), exception.getErrorSource());
-        assertEquals(exception.getParameters().size(), 1);
-        assertTrue(exception.getParameters().contains(new ErrorDetailParameter(email.value())));
-    }
+        ErrorData secondError = errors.get(1);
+        assertEquals(HttpStatus.BAD_REQUEST, secondError.httpStatus());
+        assertEquals(new ErrorCode("error.client.emailExists"), secondError.errorCode());
+        assertEquals(new ErrorSource("data/attributes/email"), secondError.errorSource());
+        assertEquals(secondError.parameters().size(), 1);
+        assertTrue(secondError.parameters().contains(new ErrorDetailParameter(email.value())));
 
-    @Test
-    void Create_new_user_When_user_with_phone_exists() {
-        PhoneNumber phoneNumber = new PhoneNumber("1");
-        CreateNewUserCommand user1Command = buildWriteCommand(new Username("user1"), new Email("email1"), phoneNumber);
-        ValidateNewUserData user2Command = buildValidateCommand(new Username("user2"), new Email("email2"), phoneNumber);
-        assertDoesNotThrow(() -> writeUserService.handle(user1Command));
-
-        UserAppException exception = assertThrows(UserAppException.class, () -> readUserService.handle(user2Command));
-        assertEquals(HttpStatus.BAD_REQUEST, exception.getHttpStatus());
-        assertEquals(new ErrorCode("error.client.phoneNumberExists"), exception.getErrorCode());
-        assertEquals(new ErrorSource("data/attributes/phoneNumber"), exception.getErrorSource());
-        assertEquals(exception.getParameters().size(), 1);
-        assertTrue(exception.getParameters().contains(new ErrorDetailParameter(phoneNumber.value())));
+        ErrorData lastError = errors.getLast();
+        assertEquals(HttpStatus.BAD_REQUEST, lastError.httpStatus());
+        assertEquals(new ErrorCode("error.client.phoneNumberExists"), lastError.errorCode());
+        assertEquals(new ErrorSource("data/attributes/phoneNumber"), lastError.errorSource());
+        assertEquals(lastError.parameters().size(), 1);
+        assertTrue(lastError.parameters().contains(new ErrorDetailParameter(phone.value())));
     }
 
     @Test
@@ -101,6 +94,7 @@ class WriteUserServiceTest {
         assertEquals(user2Command.lastName(), userDto.lastName());
         assertEquals(user2Command.city(), userDto.city());
         assertEquals(user2Command.country(), userDto.country());
+        assertFalse(userDto.active().value());
     }
 
     private CreateNewUserCommand buildWriteCommand(Username user1, Email email1, PhoneNumber phoneNumber) {

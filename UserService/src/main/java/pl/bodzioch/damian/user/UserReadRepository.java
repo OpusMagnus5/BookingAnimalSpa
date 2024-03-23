@@ -38,7 +38,7 @@ class UserReadRepository implements IUserReadRepository {
             UserEntity result = entityManager.createQuery(query).getSingleResult();
             return Optional.of(new User(result));
         } catch (NoResultException e) {
-            log.info("User with the username {} and email {} was not found", username.value(), email.value());
+            log.info("User with the username {} or email {} or phone {} was not found", username.value(), email.value(), phoneNumber.value());
             return Optional.empty();
         }
     }

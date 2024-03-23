@@ -5,6 +5,7 @@ import pl.bodzioch.damian.exception.UserAppException;
 import pl.bodzioch.damian.utils.HttpStatus;
 import pl.bodzioch.damian.valueobject.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -42,17 +43,21 @@ record User(
     }
 
     void checkIncorrectParameter(ValidateNewUserData command) {
+        List<ErrorData> errorData = new ArrayList<>();
         if (command.username().equals(username)) {
-            throwUserExistsByUsernameException(command.username());
-        } else if (command.email().equals(email)) {
-            throwUserExistsByEmailException(command.email());
-        } else if (command.phoneNumber().equals(phoneNumber)) {
-            throwUserExistsByPhoneException(command.phoneNumber());
+            errorData.add(buildUserExistsByUsernameException(command.username()));
         }
+        if (command.email().equals(email)) {
+            errorData.add(throwUserExistsByEmailException(command.email()));
+        }
+        if (command.phoneNumber().equals(phoneNumber)) {
+            errorData.add(throwUserExistsByPhoneException(command.phoneNumber()));
+        }
+        throw new UserAppException(HttpStatus.BAD_REQUEST, errorData);
     }
 
-    private void throwUserExistsByUsernameException(Username username) {
-        throw new UserAppException(
+    private ErrorData buildUserExistsByUsernameException(Username username) {
+        return new ErrorData(
                 HttpStatus.BAD_REQUEST,
                 new ErrorCode("error.client.usernameExists"),
                 new ErrorSource("data/attributes/username"),
@@ -60,8 +65,8 @@ record User(
         );
     }
 
-    private void throwUserExistsByEmailException(Email email) {
-        throw new UserAppException(
+    private ErrorData throwUserExistsByEmailException(Email email) {
+        return new ErrorData(
                 HttpStatus.BAD_REQUEST,
                 new ErrorCode("error.client.emailExists"),
                 new ErrorSource("data/attributes/email"),
@@ -69,8 +74,8 @@ record User(
         );
     }
 
-    private void throwUserExistsByPhoneException(PhoneNumber phoneNumber) {
-        throw new UserAppException(
+    private ErrorData throwUserExistsByPhoneException(PhoneNumber phoneNumber) {
+        return new ErrorData(
                 HttpStatus.BAD_REQUEST,
                 new ErrorCode("error.client.phoneNumberExists"),
                 new ErrorSource("data/attributes/phoneNumber"),

@@ -19,7 +19,10 @@ class ReadUserService implements IReadUserService {
     @Override
     public User handle(FindUserByIdCommand command) {
         return userReadRepository.findById(command.userId())
-                .orElseThrow(() -> buildUserNotExistByIdException(command.userId()));
+                .orElseThrow(() -> new UserAppException(
+                        HttpStatus.BAD_REQUEST,
+                        List.of(buildUserNotExistByIdException(command.userId())))
+                );
     }
 
     @Override
@@ -35,8 +38,8 @@ class ReadUserService implements IReadUserService {
         //TODO
     }
 
-    private UserAppException buildUserNotExistByIdException(UserId id) {
-        return new UserAppException(
+    private ErrorData buildUserNotExistByIdException(UserId id) {
+        return new ErrorData(
                 HttpStatus.BAD_REQUEST,
                 new ErrorCode("error.client.userByIdNotExists"),
                 new ErrorSource("data/attributes/id"),
