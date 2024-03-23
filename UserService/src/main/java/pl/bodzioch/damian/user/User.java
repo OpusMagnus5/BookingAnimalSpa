@@ -60,7 +60,7 @@ record User(
         return new ErrorData(
                 HttpStatus.BAD_REQUEST,
                 new ErrorCode("error.client.usernameExists"),
-                new ErrorSource("data/attributes/username"),
+                new ErrorSource("username"),
                 List.of(new ErrorDetailParameter(username.value()))
         );
     }
@@ -69,7 +69,7 @@ record User(
         return new ErrorData(
                 HttpStatus.BAD_REQUEST,
                 new ErrorCode("error.client.emailExists"),
-                new ErrorSource("data/attributes/email"),
+                new ErrorSource("email"),
                 List.of(new ErrorDetailParameter(email.value()))
         );
     }
@@ -78,7 +78,7 @@ record User(
         return new ErrorData(
                 HttpStatus.BAD_REQUEST,
                 new ErrorCode("error.client.phoneNumberExists"),
-                new ErrorSource("data/attributes/phoneNumber"),
+                new ErrorSource("phoneNumber"),
                 List.of(new ErrorDetailParameter(phoneNumber.value()))
         );
     }

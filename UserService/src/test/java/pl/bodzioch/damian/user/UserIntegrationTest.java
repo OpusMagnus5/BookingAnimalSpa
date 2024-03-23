@@ -16,11 +16,13 @@ import org.springframework.test.web.servlet.client.MockMvcWebTestClient;
 import org.springframework.web.context.WebApplicationContext;
 import pl.bodzioch.damian.dto.CheckNewUserDataRequest;
 import pl.bodzioch.damian.dto.CreateNewUserRequest;
-import pl.bodzioch.damian.dto.UserAppErrorResponse;
+import pl.bodzioch.damian.util.JsonToString;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import static pl.bodzioch.damian.exception.UserAppException.REQUEST_ID_MDC_PARAM;
+import static pl.bodzioch.damian.util.TestDataGenerator.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Transactional
@@ -49,10 +51,10 @@ class UserIntegrationTest {
     }
 
     @Test
-    void Approve_new_user_data_When_user_with_unique_data_exists(){
-        String user = "user";
-        String mail = "email@email.com";
-        String phone = "111111111";
+    void Approve_new_user_data_When_user_with_unique_data_exists() throws IOException {
+        String user = username().value();
+        String mail = email().value();
+        String phone = phoneNumber().value();
 
         CreateNewUserRequest createRequest = buildCreateNewUserRequest(user, mail, phone);
         client.post()
@@ -62,39 +64,39 @@ class UserIntegrationTest {
                 .expectStatus().isCreated();
 
         CheckNewUserDataRequest checkRequest = buildCheckNewUserRequest(user, mail, phone);
-        UserAppErrorResponse responseBody = client.post()
+        client.post()
                 .uri(UserController.APPROVE_NEW)
                 .accept(MediaType.APPLICATION_JSON)
                 .bodyValue(checkRequest)
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
-                .expectBody(UserAppErrorResponse.class).returnResult().getResponseBody();
+                .expectBody().json(JsonToString.getResponseJson("Approve_new_user_data_When_user_with_unique_data_exists.json"));
     }
 
     private CheckNewUserDataRequest buildCheckNewUserRequest(String username, String email, String phone) {
         return new CheckNewUserDataRequest(
                 username,
-                "password1",
+                password().value(),
                 email,
                 phone,
-                "Name",
-                "Lastname",
-                "City",
-                "PL"
+                firstName().value(),
+                lastName().value(),
+                city().value(),
+                country().value().getLanguage().toUpperCase()
         );
     }
     private CreateNewUserRequest buildCreateNewUserRequest(String username, String email, String phone) {
         return new CreateNewUserRequest(
                 username,
-                "password1",
+                password().value(),
                 email,
                 phone,
-                "Name",
-                "Lastname",
-                "City",
-                "PL",
-                "111111"
+                firstName().value(),
+                lastName().value(),
+                city().value(),
+                country().value().getLanguage().toUpperCase(),
+                smsCode().value()
         );
     }
 }

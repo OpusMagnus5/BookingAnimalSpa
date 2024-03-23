@@ -26,7 +26,7 @@ public record CheckNewUserDataRequest(
         @Pattern(regexp = "[A-ZĄŻĘĆŁÓŃ][a-zążęćłóń]{2,}", message = "error.client.incorrectLastName")
         String lastName,
         @NotEmpty(message = "error.client.cityEmpty")
-        @Pattern(regexp = "[A-ZĄŻĘĆŁÓŃ][a-zążęćłóń ]+", message = "error.client.incorrectCity")
+        @Pattern(regexp = "[A-ZĄŻĘĆŁÓŃ][a-zążęćłóń ]{2,}", message = "error.client.incorrectCity")
         String city,
         @NotEmpty(message = "error.client.countryEmpty")
         @Pattern(regexp = "[A-Z]{2,3}", message = "error.client.incorrectCountry")

@@ -1,0 +1,28 @@
+{
+  "errors": [
+    {
+      "status": 400,
+      "code": "error.client.usernameExists",
+      "detail": "Username already exists.",
+      "source": {
+        "pointer": "username"
+      }
+    },
+    {
+      "status": 400,
+      "code": "error.client.emailExists",
+      "detail": "Email already exists.",
+      "source": {
+        "pointer": "email"
+      }
+    },
+    {
+      "status": 400,
+      "code": "error.client.phoneNumberExists",
+      "detail": "Phone number already exists.",
+      "source": {
+        "pointer": "phoneNumber"
+      }
+    }
+  ]
+}

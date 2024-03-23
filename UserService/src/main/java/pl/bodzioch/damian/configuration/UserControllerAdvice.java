@@ -58,7 +58,7 @@ class UserControllerAdvice {
         return new ErrorData(
                 HttpStatus.BAD_REQUEST,
                 new ErrorCode(fieldError.getDefaultMessage()),
-                new ErrorSource("data/attributes/" + fieldError.getField()),
+                new ErrorSource(fieldError.getField()),
                 Collections.emptyList()
         );
     }

@@ -42,7 +42,7 @@ class ReadUserService implements IReadUserService {
         return new ErrorData(
                 HttpStatus.BAD_REQUEST,
                 new ErrorCode("error.client.userByIdNotExists"),
-                new ErrorSource("data/attributes/id"),
+                new ErrorSource("id"),
                 List.of(new ErrorDetailParameter(id.value().toString()))
         );
     }
