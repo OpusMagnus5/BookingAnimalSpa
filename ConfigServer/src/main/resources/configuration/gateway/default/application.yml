@@ -10,3 +10,9 @@ spring:
   threads:
     virtual:
       enabled: true
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true

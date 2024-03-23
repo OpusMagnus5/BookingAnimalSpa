@@ -7,6 +7,3 @@ spring:
     config:
       uri: http://localhost:8888
       profile: ${spring.profiles.active}
-  threads:
-    virtual:
-      enabled: true
