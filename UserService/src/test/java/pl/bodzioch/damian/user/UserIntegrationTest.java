@@ -24,7 +24,7 @@ import java.util.UUID;
 import static pl.bodzioch.damian.exception.UserAppException.REQUEST_ID_MDC_PARAM;
 import static pl.bodzioch.damian.util.TestDataGenerator.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest
 @Transactional
 @Rollback
 class UserIntegrationTest {
@@ -71,7 +71,7 @@ class UserIntegrationTest {
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
-                .expectBody().json(JsonToString.getResponseJson("Approve_new_user_data_When_user_with_unique_data_exists.json"));
+                .expectBody().json(JsonToString.getResponseJson("Approve_new_user_data_When_user_with_unique_data_exists"));
     }
 
     private CheckNewUserDataRequest buildCheckNewUserRequest(String username, String email, String phone) {
