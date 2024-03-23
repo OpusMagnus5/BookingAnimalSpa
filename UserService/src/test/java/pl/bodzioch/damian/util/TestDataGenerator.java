@@ -73,4 +73,8 @@ public class TestDataGenerator {
                 .build();
         return new SmsCode(generator.generate(6));
     }
+
+    public static String getIncorrectValue() {
+        return "!@#$";
+    }
 }

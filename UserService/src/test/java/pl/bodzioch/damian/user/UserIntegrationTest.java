@@ -74,6 +74,33 @@ class UserIntegrationTest {
                 .expectBody().json(JsonToString.getResponseJson("Approve_new_user_data_When_user_with_unique_data_exists"));
     }
 
+    @Test
+    void Approve_new_user_data_When_user_data_are_incorrect() throws IOException {
+        CheckNewUserDataRequest request = getCheckNewUserRequestWithAllIncorrectData();
+        client.post()
+                .uri(UserController.APPROVE_NEW)
+                .accept(MediaType.APPLICATION_JSON)
+                .bodyValue(request)
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody().json(JsonToString.getResponseJson("Approve_new_user_data_When_user_data_are_incorrect"));
+    }
+
+    private CreateNewUserRequest buildCreateNewUserRequest(String username, String email, String phone) {
+        return new CreateNewUserRequest(
+                username,
+                password().value(),
+                email,
+                phone,
+                firstName().value(),
+                lastName().value(),
+                city().value(),
+                country().value().getLanguage().toUpperCase(),
+                smsCode().value()
+        );
+    }
+
     private CheckNewUserDataRequest buildCheckNewUserRequest(String username, String email, String phone) {
         return new CheckNewUserDataRequest(
                 username,
@@ -86,17 +113,16 @@ class UserIntegrationTest {
                 country().value().getLanguage().toUpperCase()
         );
     }
-    private CreateNewUserRequest buildCreateNewUserRequest(String username, String email, String phone) {
-        return new CreateNewUserRequest(
-                username,
-                password().value(),
-                email,
-                phone,
-                firstName().value(),
-                lastName().value(),
-                city().value(),
-                country().value().getLanguage().toUpperCase(),
-                smsCode().value()
+    private CheckNewUserDataRequest getCheckNewUserRequestWithAllIncorrectData() {
+        return new CheckNewUserDataRequest(
+                getIncorrectValue(),
+                getIncorrectValue(),
+                getIncorrectValue(),
+                getIncorrectValue(),
+                getIncorrectValue(),
+                getIncorrectValue(),
+                getIncorrectValue(),
+                getIncorrectValue()
         );
     }
 }
