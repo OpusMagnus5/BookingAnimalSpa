@@ -16,8 +16,6 @@ services:
      depends_on:
        service-discovery:
          condition: service_started
-     env_file:
-       - 'env-conf.txt'
   gateway:
     container_name: gateway
     image: gateway
@@ -52,3 +50,6 @@ services:
         condition: service_started
       service-discovery:
         condition: service_started
+    env_file:
+      - 'env-conf.txt'
+      #sprawdzić wyjątki w serwisach po uruchomieniu, service discovery próbuje się dobić do localhosta,
