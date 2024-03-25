@@ -1,0 +1,54 @@
+services:
+  postgres:
+    container_name: 'postgres'
+    image: postgres:16
+    restart: no
+    ports:
+      - '5432:5432'
+    env_file:
+      - 'env-db.txt'
+  config-server:
+     container_name: 'config-server'
+     image: config-server
+     restart: no
+     ports:
+       - '8888:8888'
+     depends_on:
+       service-discovery:
+         condition: service_started
+     env_file:
+       - 'env-conf.txt'
+  gateway:
+    container_name: gateway
+    image: gateway
+    restart: no
+    ports:
+      - '80:80'
+    depends_on:
+      postgres:
+        condition: service_started
+      config-server:
+        condition: service_started
+      service-discovery:
+        condition: service_started
+      user-service:
+        condition: service_started
+  service-discovery:
+    container_name: service-discovery
+    image: service-discovery
+    restart: on-failure
+    ports:
+      - '8762:8762'
+  user-service:
+    container_name: user-service
+    image: user-service
+    restart: no
+    ports:
+      - '8500:8080'
+    depends_on:
+      config-server:
+        condition: service_started
+      postgres:
+        condition: service_started
+      service-discovery:
+        condition: service_started

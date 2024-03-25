@@ -1,6 +1,7 @@
 package pl.bodzioch.damian.user;
 
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,6 +49,11 @@ class UserIntegrationTest {
                 .configureClient()
                 .baseUrl(UserController.ROOT_PATH)
                 .build();
+    }
+
+    @AfterAll
+    static void cleanUp() {
+        mdcMocked.close();
     }
 
     @Test

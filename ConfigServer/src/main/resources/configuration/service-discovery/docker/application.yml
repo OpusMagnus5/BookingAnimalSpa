@@ -5,10 +5,11 @@ eureka:
   client:
     fetch-registry: false
     register-with-eureka: false
+    eureka-server-port: 8762
+  instance:
+    hostname: service-discovery
 
 spring:
   threads:
     virtual:
       enabled: true
-  application:
-    name: service-discovery
