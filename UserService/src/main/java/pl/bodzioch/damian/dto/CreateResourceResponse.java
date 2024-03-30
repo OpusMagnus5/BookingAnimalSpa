@@ -1,15 +1,16 @@
 package pl.bodzioch.damian.dto;
 
-public record CreateResourceResponse(
+import pl.bodzioch.damian.utils.ResourceLinkGenerator;
 
-        DataDto data,
-        RelationshipsDto relationships
+public record CreateResourceResponse(
+        ReadDataDto data,
+        LinksDto links
 ) {
 
     public CreateResourceResponse(UserDto userDto) {
         this(
-                new DataDto(userDto),
-                null
+                new ReadDataDto(userDto),
+                new LinksDto(ResourceLinkGenerator.userResource(userDto.id()))
         );
     }
 }

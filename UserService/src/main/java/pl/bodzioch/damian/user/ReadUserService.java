@@ -3,7 +3,7 @@ package pl.bodzioch.damian.user;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import pl.bodzioch.damian.command.FindUserByIdCommand;
-import pl.bodzioch.damian.command.ValidateNewUserData;
+import pl.bodzioch.damian.command.ValidateNewUserDataCommand;
 import pl.bodzioch.damian.exception.UserAppException;
 import pl.bodzioch.damian.utils.HttpStatus;
 import pl.bodzioch.damian.valueobject.*;
@@ -26,23 +26,16 @@ class ReadUserService implements IReadUserService {
     }
 
     @Override
-    public void handle(ValidateNewUserData command) {
+    public void handle(ValidateNewUserDataCommand command) {
         Optional<User> user = userReadRepository.getByNaturalIds(command.username(), command.email(), command.phoneNumber());
         user.ifPresent(entity -> entity.checkIncorrectParameter(command));
-        if (command.smsRequired().value()) {
-            sendSmsToPhoneNumber();
-        }
-    }
-
-    private void sendSmsToPhoneNumber() {
-        //TODO
     }
 
     private ErrorData buildUserNotExistByIdException(UserId id) {
         return new ErrorData(
                 HttpStatus.BAD_REQUEST,
                 new ErrorCode("error.client.userByIdNotExists"),
-                new ErrorSource("id"),
+                new ErrorSource("data.attributes.id"),
                 List.of(new ErrorDetailParameter(id.value().toString()))
         );
     }

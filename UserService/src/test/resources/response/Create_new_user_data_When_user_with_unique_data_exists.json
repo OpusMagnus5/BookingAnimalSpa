@@ -1,27 +1,30 @@
 {
   "errors": [
     {
+      "id": "018e8fbb-8d06-752e-b90d-4f7dac6ce995",
       "status": 400,
       "code": "error.client.usernameExists",
       "detail": "Username already exists.",
       "source": {
-        "pointer": "username"
+        "pointer": "data/attributes/username"
       }
     },
     {
+      "id": "018e8fbb-8d06-723d-98f2-234045b8e9a1",
       "status": 400,
       "code": "error.client.emailExists",
       "detail": "Email already exists.",
       "source": {
-        "pointer": "email"
+        "pointer": "data/attributes/email"
       }
     },
     {
+      "id": "018e8fbb-8d06-7173-8b5f-660553bef64e",
       "status": 400,
       "code": "error.client.phoneNumberExists",
       "detail": "Phone number already exists.",
       "source": {
-        "pointer": "phoneNumber"
+        "pointer": "data/attributes/phoneNumber"
       }
     }
   ]

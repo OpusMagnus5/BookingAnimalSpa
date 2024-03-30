@@ -2,7 +2,7 @@ package pl.bodzioch.damian.dto;
 
 import java.time.LocalDateTime;
 
-public record AttributesDto(
+public record ReadAttributesDto(
         Long id,
         String username,
         String email,
@@ -17,7 +17,7 @@ public record AttributesDto(
 
 ) {
 
-    public AttributesDto(UserDto userDto) {
+    public ReadAttributesDto(UserDto userDto) {
         this(
                 userDto.id().value(),
                 userDto.username().value(),

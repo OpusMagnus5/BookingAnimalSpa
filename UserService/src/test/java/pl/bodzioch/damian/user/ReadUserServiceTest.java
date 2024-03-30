@@ -7,7 +7,7 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.slf4j.MDC;
 import pl.bodzioch.damian.command.CreateNewUserCommand;
-import pl.bodzioch.damian.command.ValidateNewUserData;
+import pl.bodzioch.damian.command.ValidateNewUserDataCommand;
 import pl.bodzioch.damian.exception.UserAppException;
 import pl.bodzioch.damian.utils.HttpStatus;
 import pl.bodzioch.damian.valueobject.*;
@@ -45,7 +45,7 @@ class ReadUserServiceTest {
         Email email = email();
         PhoneNumber phone = phoneNumber();
         CreateNewUserCommand user1 = buildWriteCommand(username, email, phone);
-        ValidateNewUserData user2 = buildValidateCommand(username, email, phone);
+        ValidateNewUserDataCommand user2 = buildValidateCommand(username, email, phone);
         assertDoesNotThrow(() -> writeUserService.handle(user1));
 
         UserAppException exception = assertThrows(UserAppException.class, () -> readUserService.handle(user2));
@@ -57,21 +57,21 @@ class ReadUserServiceTest {
         ErrorData firstError = errors.getFirst();
         assertEquals(HttpStatus.BAD_REQUEST, firstError.httpStatus());
         assertEquals(new ErrorCode("error.client.usernameExists"), firstError.errorCode());
-        assertEquals(new ErrorSource("username"), firstError.errorSource());
+        assertEquals(new ErrorSource("data.attributes.username"), firstError.errorSource());
         assertEquals(firstError.parameters().size(), 1);
         assertTrue(firstError.parameters().contains(new ErrorDetailParameter(username.value())));
 
         ErrorData secondError = errors.get(1);
         assertEquals(HttpStatus.BAD_REQUEST, secondError.httpStatus());
         assertEquals(new ErrorCode("error.client.emailExists"), secondError.errorCode());
-        assertEquals(new ErrorSource("email"), secondError.errorSource());
+        assertEquals(new ErrorSource("data.attributes.email"), secondError.errorSource());
         assertEquals(secondError.parameters().size(), 1);
         assertTrue(secondError.parameters().contains(new ErrorDetailParameter(email.value())));
 
         ErrorData lastError = errors.getLast();
         assertEquals(HttpStatus.BAD_REQUEST, lastError.httpStatus());
         assertEquals(new ErrorCode("error.client.phoneNumberExists"), lastError.errorCode());
-        assertEquals(new ErrorSource("phoneNumber"), lastError.errorSource());
+        assertEquals(new ErrorSource("data.attributes.phoneNumber"), lastError.errorSource());
         assertEquals(lastError.parameters().size(), 1);
         assertTrue(lastError.parameters().contains(new ErrorDetailParameter(phone.value())));
     }
@@ -89,12 +89,11 @@ class ReadUserServiceTest {
         );
     }
 
-    private ValidateNewUserData buildValidateCommand(Username user, Email email, PhoneNumber phoneNumber) {
-        return new ValidateNewUserData(
+    private ValidateNewUserDataCommand buildValidateCommand(Username user, Email email, PhoneNumber phoneNumber) {
+        return new ValidateNewUserDataCommand(
                 user,
                 email,
-                phoneNumber,
-                new SmsRequired(false)
+                phoneNumber
         );
     }
 }

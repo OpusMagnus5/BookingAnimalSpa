@@ -18,14 +18,14 @@ public record CreateNewUserCommand(
 
     public CreateNewUserCommand(CreateNewUserRequest request) {
         this(
-                new Username(request.username()),
-                new Password(request.password()),
-                new Email(request.email()),
-                new PhoneNumber(request.phoneNumber()),
-                new FirstName(request.firstName()),
-                new LastName(request.lastName()),
-                new City(request.city()),
-                new Country(Locale.of(request.country()))
+                new Username(request.data().attributes().username()),
+                new Password(request.data().attributes().password()),
+                new Email(request.data().attributes().email()),
+                new PhoneNumber(request.data().attributes().phoneNumber()),
+                new FirstName(request.data().attributes().firstName()),
+                new LastName(request.data().attributes().lastName()),
+                new City(request.data().attributes().city()),
+                new Country(Locale.of(request.data().attributes().country()))
         );
     }
 }

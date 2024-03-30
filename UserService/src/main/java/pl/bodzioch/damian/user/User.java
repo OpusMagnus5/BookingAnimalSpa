@@ -1,6 +1,6 @@
 package pl.bodzioch.damian.user;
 
-import pl.bodzioch.damian.command.ValidateNewUserData;
+import pl.bodzioch.damian.command.ValidateNewUserDataCommand;
 import pl.bodzioch.damian.exception.UserAppException;
 import pl.bodzioch.damian.utils.HttpStatus;
 import pl.bodzioch.damian.valueobject.*;
@@ -42,7 +42,7 @@ record User(
         );
     }
 
-    void checkIncorrectParameter(ValidateNewUserData command) {
+    void checkIncorrectParameter(ValidateNewUserDataCommand command) {
         List<ErrorData> errorData = new ArrayList<>();
         if (command.username().equals(username)) {
             errorData.add(buildUserExistsByUsernameException(command.username()));
@@ -60,7 +60,7 @@ record User(
         return new ErrorData(
                 HttpStatus.BAD_REQUEST,
                 new ErrorCode("error.client.usernameExists"),
-                new ErrorSource("username"),
+                new ErrorSource("data.attributes.username"),
                 List.of(new ErrorDetailParameter(username.value()))
         );
     }
@@ -69,7 +69,7 @@ record User(
         return new ErrorData(
                 HttpStatus.BAD_REQUEST,
                 new ErrorCode("error.client.emailExists"),
-                new ErrorSource("email"),
+                new ErrorSource("data.attributes.email"),
                 List.of(new ErrorDetailParameter(email.value()))
         );
     }
@@ -78,7 +78,7 @@ record User(
         return new ErrorData(
                 HttpStatus.BAD_REQUEST,
                 new ErrorCode("error.client.phoneNumberExists"),
-                new ErrorSource("phoneNumber"),
+                new ErrorSource("data.attributes.phoneNumber"),
                 List.of(new ErrorDetailParameter(phoneNumber.value()))
         );
     }

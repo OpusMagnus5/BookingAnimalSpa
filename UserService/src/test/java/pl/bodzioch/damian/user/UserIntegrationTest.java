@@ -15,9 +15,9 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.client.MockMvcWebTestClient;
 import org.springframework.web.context.WebApplicationContext;
-import pl.bodzioch.damian.dto.CheckNewUserDataRequest;
-import pl.bodzioch.damian.dto.CreateNewUserRequest;
+import pl.bodzioch.damian.dto.*;
 import pl.bodzioch.damian.util.JsonToString;
+import pl.bodzioch.damian.utils.ResourceLinkGenerator;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -47,7 +47,7 @@ class UserIntegrationTest {
     void setUp() {
         client = MockMvcWebTestClient.bindToApplicationContext(applicationContext)
                 .configureClient()
-                .baseUrl(UserController.ROOT_PATH)
+                .baseUrl(ResourceLinkGenerator.ROOT_PATH)
                 .build();
     }
 
@@ -57,7 +57,7 @@ class UserIntegrationTest {
     }
 
     @Test
-    void Approve_new_user_data_When_user_with_unique_data_exists() throws IOException {
+    void Create_new_user_data_When_user_with_unique_data_exists() throws IOException {
         String user = username().value();
         String mail = email().value();
         String phone = phoneNumber().value();
@@ -69,46 +69,28 @@ class UserIntegrationTest {
                 .exchange()
                 .expectStatus().isCreated();
 
-        CheckNewUserDataRequest checkRequest = buildCheckNewUserRequest(user, mail, phone);
+        CreateNewUserRequest checkRequest = buildCreateNewUserRequest(user, mail, phone);
         client.post()
-                .uri(UserController.APPROVE_NEW)
                 .accept(MediaType.APPLICATION_JSON)
                 .bodyValue(checkRequest)
                 .exchange()
                 .expectStatus().isBadRequest()
                 .expectHeader().contentType(MediaType.APPLICATION_JSON)
-                .expectBody().json(JsonToString.getResponseJson("Approve_new_user_data_When_user_with_unique_data_exists"));
-    }
-
-    @Test
-    void Approve_new_user_data_When_user_data_are_incorrect() throws IOException {
-        CheckNewUserDataRequest request = getCheckNewUserRequestWithAllIncorrectData();
-        client.post()
-                .uri(UserController.APPROVE_NEW)
-                .accept(MediaType.APPLICATION_JSON)
-                .bodyValue(request)
-                .exchange()
-                .expectStatus().isBadRequest()
-                .expectHeader().contentType(MediaType.APPLICATION_JSON)
-                .expectBody().json(JsonToString.getResponseJson("Approve_new_user_data_When_user_data_are_incorrect"));
+                .expectBody().json(JsonToString.getResponseJson("Create_new_user_data_When_user_with_unique_data_exists"));
     }
 
     private CreateNewUserRequest buildCreateNewUserRequest(String username, String email, String phone) {
         return new CreateNewUserRequest(
-                username,
-                password().value(),
-                email,
-                phone,
-                firstName().value(),
-                lastName().value(),
-                city().value(),
-                country().value().getLanguage().toUpperCase(),
-                smsCode().value()
+                new WriteDataDto(
+                        UserDto.TYPE,
+                        buildWriteAttributesDto(username, email, phone)
+                ),
+                null
         );
     }
 
-    private CheckNewUserDataRequest buildCheckNewUserRequest(String username, String email, String phone) {
-        return new CheckNewUserDataRequest(
+    private WriteAttributesDto buildWriteAttributesDto(String username, String email, String phone) {
+        return new WriteAttributesDto(
                 username,
                 password().value(),
                 email,
@@ -117,18 +99,6 @@ class UserIntegrationTest {
                 lastName().value(),
                 city().value(),
                 country().value().getLanguage().toUpperCase()
-        );
-    }
-    private CheckNewUserDataRequest getCheckNewUserRequestWithAllIncorrectData() {
-        return new CheckNewUserDataRequest(
-                getIncorrectValue(),
-                getIncorrectValue(),
-                getIncorrectValue(),
-                getIncorrectValue(),
-                getIncorrectValue(),
-                getIncorrectValue(),
-                getIncorrectValue(),
-                getIncorrectValue()
         );
     }
 }

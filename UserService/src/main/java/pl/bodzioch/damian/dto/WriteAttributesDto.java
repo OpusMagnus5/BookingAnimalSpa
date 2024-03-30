@@ -4,14 +4,13 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 
-import java.io.Serializable;
+public record WriteAttributesDto(
 
-public record CheckNewUserDataRequest(
         @NotEmpty(message = "error.client.usernameEmpty")
-        @Pattern(regexp = "[a-zA-Z0-9]{6,30}", message = "error.client.incorrectUsername")
+        @Pattern(regexp = "[a-zA-Z0-9]+", message = "error.client.incorrectUsername")
         String username,
         @NotEmpty(message = "error.client.passwordEmpty")
-        @Pattern(regexp = "\\S{9,64}", message = "error.client.incorrectPassword")
+        @Pattern(regexp = "\\S{9,}", message = "error.client.incorrectPassword")
         String password,
         @NotEmpty(message = "error.client.emailEmpty")
         @Email(message = "error.client.incorrectEmail")
@@ -20,16 +19,16 @@ public record CheckNewUserDataRequest(
         @Pattern(regexp = "\\d{9}", message = "error.client.incorrectPhoneNumber")
         String phoneNumber,
         @NotEmpty(message = "error.client.firstNameEmpty")
-        @Pattern(regexp = "[A-ZĄŻĘĆŁÓŃ][a-zążęćłóń]{2,}", message = "error.client.incorrectFirstName")
+        @Pattern(regexp = "[a-zA-ZążęćłóńĄŻĘĆŁÓŃ]+", message = "error.client.incorrectFirstName")
         String firstName,
         @NotEmpty(message = "error.client.lastNameEmpty")
-        @Pattern(regexp = "[A-ZĄŻĘĆŁÓŃ][a-zążęćłóń]{2,}", message = "error.client.incorrectLastName")
+        @Pattern(regexp = "[a-zA-ZążęćłóńĄŻĘĆŁÓŃ]+", message = "error.client.incorrectLastName")
         String lastName,
         @NotEmpty(message = "error.client.cityEmpty")
-        @Pattern(regexp = "[A-ZĄŻĘĆŁÓŃ][a-zążęćłóń ]{2,}", message = "error.client.incorrectCity")
+        @Pattern(regexp = "[a-zA-ZążęćłóńĄŻĘĆŁÓŃ ]+", message = "error.client.incorrectCity")
         String city,
         @NotEmpty(message = "error.client.countryEmpty")
         @Pattern(regexp = "[A-Z]{2,3}", message = "error.client.incorrectCountry")
         String country
-) implements Serializable {
+) {
 }
