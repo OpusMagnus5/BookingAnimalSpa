@@ -1,0 +1,76 @@
+{
+  "errors": [
+    {
+      "status": 400,
+      "code": "error.client.incorrectFirstName",
+      "detail": "Incorrect first name.",
+      "source": {
+        "pointer": "data.attributes.firstName"
+      }
+    },
+    {
+      "status": 400,
+      "code": "error.client.incorrectUsername",
+      "detail": "Incorrect username.",
+      "source": {
+        "pointer": "data.attributes.username"
+      }
+    },
+    {
+      "status": 400,
+      "code": "error.client.wrongType",
+      "detail": "Incorrect data type.",
+      "source": {
+        "pointer": "data.type"
+      }
+    },
+    {
+      "status": 400,
+      "code": "error.client.incorrectPassword",
+      "detail": "Incorrect password.",
+      "source": {
+        "pointer": "data.attributes.password"
+      }
+    },
+    {
+      "status": 400,
+      "code": "error.client.incorrectCountry",
+      "detail": "Incorrect country.",
+      "source": {
+        "pointer": "data.attributes.country"
+      }
+    },
+    {
+      "status": 400,
+      "code": "error.client.incorrectPhoneNumber",
+      "detail": "Incorrect phone number.",
+      "source": {
+        "pointer": "data.attributes.phoneNumber"
+      }
+    },
+    {
+      "status": 400,
+      "code": "error.client.incorrectEmail",
+      "detail": "Incorrect email.",
+      "source": {
+        "pointer": "data.attributes.email"
+      }
+    },
+    {
+      "status": 400,
+      "code": "error.client.incorrectCity",
+      "detail": "Incorrect city.",
+      "source": {
+        "pointer": "data.attributes.city"
+      }
+    },
+    {
+      "status": 400,
+      "code": "error.client.incorrectLastName",
+      "detail": "Incorrect last name.",
+      "source": {
+        "pointer": "data.attributes.lastName"
+      }
+    }
+  ]
+}

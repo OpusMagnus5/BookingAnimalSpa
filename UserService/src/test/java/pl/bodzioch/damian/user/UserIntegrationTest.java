@@ -15,7 +15,10 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.client.MockMvcWebTestClient;
 import org.springframework.web.context.WebApplicationContext;
-import pl.bodzioch.damian.dto.*;
+import pl.bodzioch.damian.dto.CreateNewUserRequest;
+import pl.bodzioch.damian.dto.UserDto;
+import pl.bodzioch.damian.dto.WriteAttributesDto;
+import pl.bodzioch.damian.dto.WriteDataDto;
 import pl.bodzioch.damian.util.JsonToString;
 import pl.bodzioch.damian.utils.ResourceLinkGenerator;
 
@@ -79,6 +82,42 @@ class UserIntegrationTest {
                 .expectBody().json(JsonToString.getResponseJson("Create_new_user_data_When_user_with_unique_data_exists"));
     }
 
+    @Test
+    void Create_new_user_data_When_request_is_incorrect() throws IOException {
+        CreateNewUserRequest incorrectRequest = buildIncorrectCreateNewUserRequest();
+        client.post()
+                .accept(MediaType.APPLICATION_JSON)
+                .bodyValue(incorrectRequest)
+                .exchange()
+                .expectStatus().isBadRequest()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody().json(JsonToString.getResponseJson("Create_new_user_data_When_request_is_incorrect"));
+    }
+
+    @Test
+    void Create_new_user_data_When_request_is_correct() {
+        CreateNewUserRequest request = buildCreateNewUserRequest(username().value(), email().value(), phoneNumber().value());
+        client.post()
+                .accept(MediaType.APPLICATION_JSON)
+                .bodyValue(request)
+                .exchange()
+                .expectStatus().isCreated()
+                .expectHeader().contentType(MediaType.APPLICATION_JSON)
+                .expectBody().jsonPath("$..type").isEqualTo(UserDto.TYPE)
+                .jsonPath("$..attributes.id").isNotEmpty()
+                .jsonPath("$..attributes.username").isEqualTo(request.data().attributes().username())
+                .jsonPath("$..attributes.email").isEqualTo(request.data().attributes().email())
+                .jsonPath("$..attributes.firstName").isEqualTo(request.data().attributes().firstName())
+                .jsonPath("$..attributes.lastName").isEqualTo(request.data().attributes().lastName())
+                .jsonPath("$..attributes.city").isEqualTo(request.data().attributes().city())
+                .jsonPath("$..attributes.country").isEqualTo(request.data().attributes().country())
+                .jsonPath("$..attributes.phoneNumber").isEqualTo(request.data().attributes().phoneNumber())
+                .jsonPath("$..attributes.active").isEqualTo(false)
+                .jsonPath("$..attributes.createTime").isNotEmpty()
+                .jsonPath("$..attributes.modifyTime").isNotEmpty()
+                .jsonPath("$.links.self").isNotEmpty();
+    }
+
     private CreateNewUserRequest buildCreateNewUserRequest(String username, String email, String phone) {
         return new CreateNewUserRequest(
                 new WriteDataDto(
@@ -99,6 +138,25 @@ class UserIntegrationTest {
                 lastName().value(),
                 city().value(),
                 country().value().getLanguage().toUpperCase()
+        );
+    }
+
+    private CreateNewUserRequest buildIncorrectCreateNewUserRequest() {
+        return new CreateNewUserRequest(
+                new WriteDataDto(
+                        getIncorrectValue(),
+                        new WriteAttributesDto(
+                                getIncorrectValue(),
+                                getIncorrectValue(),
+                                getIncorrectValue(),
+                                getIncorrectValue(),
+                                getIncorrectValue(),
+                                getIncorrectValue(),
+                                getIncorrectValue(),
+                                getIncorrectValue()
+                        )
+                ),
+                null
         );
     }
 }

@@ -13,7 +13,7 @@ class WriteUserService implements IWriteUserService {
     @Override
     public UserDto handle(CreateNewUserCommand command) {
         User user = userWriteRepository.createNew(new UserEntity(command));
-        return UserMapper.mapToUserDto(user);
+        return UserMapper.mapToUserWithoutPassword(user);
         //TODO wyslac maila
     }
 }

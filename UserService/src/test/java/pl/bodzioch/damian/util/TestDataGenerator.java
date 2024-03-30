@@ -67,14 +67,7 @@ public class TestDataGenerator {
         return new Country(Locale.getDefault());
     }
 
-    public static SmsCode smsCode() {
-        RandomStringGenerator generator = new RandomStringGenerator.Builder()
-                .withinRange(new char[][]{{'0','9'}})
-                .build();
-        return new SmsCode(generator.generate(6));
-    }
-
     public static String getIncorrectValue() {
-        return "!@#$";
+        return "~";
     }
 }
