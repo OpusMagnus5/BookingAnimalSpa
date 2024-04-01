@@ -1,0 +1,35 @@
+pipeline {
+    agent {
+        label 'ubuntu-jenkins'
+    }
+
+    tools {
+        git "Git"
+        dockerTool "Docker"
+    }
+
+    stages {
+        stage("Download repository") {
+            steps {
+                git branch: 'master', url: 'https://github.com/OpusMagnus5/BookingAnimalSpa.git'
+            }
+        }
+
+        stage("Build") {
+            steps {
+                sh "mvn clean install -T 0.5C -pl Gateway -am"
+            }
+        }
+
+        stage('Build docker image') {
+            steps {
+                script {
+                    def dockerImageName = "gateway"
+                    def dockerfile = "${WORKSPACE}/Gateway/Dockerfile"
+                    def projectDir = "${WORKSPACE}/Gateway"
+                    docker.build(dockerImageName, "-f ${dockerfile} ${projectDir}");
+                }
+            }
+        }
+    }
+}
