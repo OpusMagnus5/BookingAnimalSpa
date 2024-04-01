@@ -1,4 +1,5 @@
 services:
+
   postgres:
     container_name: 'postgres'
     image: postgres:16
@@ -7,15 +8,18 @@ services:
       - '5432:5432'
     env_file:
       - 'env-db.txt'
+    healthcheck:
+      test: ["CMD_SHELL", "pg_isready -d ${DB_NAME}"]
+
   config-server:
      container_name: 'config-server'
      image: config-server
      restart: no
      ports:
        - '8888:8888'
-     depends_on:
-       service-discovery:
-         condition: service_started
+     healthcheck:
+       test: ["CMD-SHELL", "curl -f http://localhost:"]
+
   gateway:
     container_name: gateway
     image: gateway
@@ -23,20 +27,21 @@ services:
     ports:
       - '80:80'
     depends_on:
-      postgres:
-        condition: service_started
       config-server:
-        condition: service_started
+        condition: service_healthy
       service-discovery:
-        condition: service_started
-      user-service:
-        condition: service_started
+        condition: service_healthy
+
   service-discovery:
     container_name: service-discovery
     image: service-discovery
     restart: on-failure
     ports:
       - '8762:8762'
+    depends_on:
+      config-server:
+        condition: service_healthy
+
   user-service:
     container_name: user-service
     image: user-service
@@ -45,11 +50,10 @@ services:
       - '8500:8080'
     depends_on:
       config-server:
-        condition: service_started
+        condition: service_healthy
       postgres:
-        condition: service_started
+        condition: service_healthy
       service-discovery:
-        condition: service_started
+        condition: service_healthy
     env_file:
       - 'env-conf.txt'
-      #sprawdzić wyjątki w serwisach po uruchomieniu, service discovery próbuje się dobić do localhosta,
