@@ -9,7 +9,7 @@ services:
     env_file:
       - 'env-db.txt'
     healthcheck:
-      test: ["CMD_SHELL", "pg_isready -d ${POSTGRES_DB}"]
+      test: ["CMD_SHELL", "pg_isready -d $POSTGRES_DB"]
     volumes:
       - postgres:/home/booking_animal_spa/postgres:/
 
