@@ -69,3 +69,10 @@ services:
       - 'env-conf.txt'
     volumes:
       - user-service:/home/booking_animal_spa/user-service:/
+
+volumes:
+  postgres:
+  config-server:
+  gateway:
+  service-discovery:
+  user-service:
