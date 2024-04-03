@@ -1,0 +1,24 @@
+pipeline {
+    agent {
+        label 'ubuntu-jenkins'
+    }
+
+    tools {
+        git "Git"
+        dockerTool "Docker"
+    }
+
+    stages {
+        stage("Download repository") {
+            steps {
+                git branch: 'master', url: 'https://github.com/OpusMagnus5/BookingAnimalSpa.git'
+            }
+        }
+
+        stage('Docker compose') {
+            steps {
+                sh "docker compose up --no-recreate --detach"
+            }
+        }
+    }
+}
