@@ -38,7 +38,7 @@ class UserController {
         return new CreateResourceResponse(userDto);
     }
 
-    @ResponseStatus(HttpStatus.OK) //TODO pododawać tłumaczenia błędów
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/login")
     ReadResourceResponse login(@RequestParam(required = false) String username,
                                @RequestParam(required = false) String phoneNumber,
