@@ -8,7 +8,6 @@ services:
       - '5432:5432'
     env_file:
       - 'env-db.env'
-      - 'common.env'
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d $POSTGRES_DB"]
     volumes:
@@ -20,8 +19,6 @@ services:
      restart: no
      ports:
        - '8888:8888'
-     env_file:
-       - 'common.env'
      healthcheck:
        test: ["CMD-SHELL", "curl -f http://localhost:8888/actuator/health || exit 1"]
      volumes:
@@ -38,8 +35,6 @@ services:
         condition: service_healthy
       service-discovery:
         condition: service_healthy
-    env_file:
-      - 'common.env'
     volumes:
       - gateway:/home/booking_animal_spa/gateway:/
 
@@ -52,8 +47,6 @@ services:
     depends_on:
       config-server:
         condition: service_healthy
-    env_file:
-      - 'common.env'
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8762/actuator/health || exit 1"]
     volumes:
@@ -74,7 +67,6 @@ services:
         condition: service_healthy
     env_file:
       - 'env-conf.env'
-      - 'common.env'
     volumes:
       - user-service:/home/booking_animal_spa/user-service:/
 

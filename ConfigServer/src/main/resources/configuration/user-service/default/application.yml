@@ -1,6 +1,5 @@
 server:
   port: 0
-  address: ${TEST_IP}
 
 eureka:
   client:
