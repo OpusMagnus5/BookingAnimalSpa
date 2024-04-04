@@ -1,5 +1,6 @@
 server:
   port: 80
+  address: ${TEST_IP}
 
 eureka:
   client:
