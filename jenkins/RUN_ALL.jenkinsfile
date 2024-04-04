@@ -11,13 +11,17 @@ pipeline {
     stages {
         stage("Download repository") {
             steps {
-                git branch: 'master', url: 'https://github.com/OpusMagnus5/BookingAnimalSpa.git'
+                ws('/home/jenkins/workspace') {
+                    git branch: 'master', url: 'https://github.com/OpusMagnus5/BookingAnimalSpa.git'
+                }
             }
         }
 
         stage('Docker compose') {
             steps {
-                sh "docker compose up --no-recreate --detach"
+                ws('/home/jenkins/workspace') {
+                    sh "docker compose up --no-recreate --detach"
+                }
             }
         }
     }

@@ -11,23 +11,29 @@ pipeline {
     stages {
         stage("Download repository") {
             steps {
-                git branch: 'master', url: 'https://github.com/OpusMagnus5/BookingAnimalSpa.git'
+                ws('/home/jenkins/workspace') {
+                    git branch: 'master', url: 'https://github.com/OpusMagnus5/BookingAnimalSpa.git'
+                }
             }
         }
 
         stage("Build") {
             steps {
-                sh "mvn clean install -T 0.5C -pl ConfigServer -am"
+                ws('/home/jenkins/workspace') {
+                    sh "mvn clean install -T 0.5C -pl ConfigServer -am"
+                }
             }
         }
 
         stage('Build docker image') {
             steps {
-                script {
-                    def dockerImageName = "config-server"
-                    def dockerfile = "${WORKSPACE}/ConfigServer/Dockerfile"
-                    def projectDir = "${WORKSPACE}/ConfigServer"
-                    docker.build(dockerImageName, "-f ${dockerfile} ${projectDir}");
+                ws('/home/jenkins/workspace') {
+                    script {
+                        def dockerImageName = "config-server"
+                        def dockerfile = "${WORKSPACE}/ConfigServer/Dockerfile"
+                        def projectDir = "${WORKSPACE}/ConfigServer"
+                        docker.build(dockerImageName, "-f ${dockerfile} ${projectDir}");
+                    }
                 }
             }
         }
