@@ -18,4 +18,6 @@ server:
 eureka:
   client:
     service-url:
-      defaultZone: "http://service-discovery:8762/eureka/"
+      defaultZone: "http://localhost:8762/eureka/"
+  instance:
+    prefer-ip-address: true
