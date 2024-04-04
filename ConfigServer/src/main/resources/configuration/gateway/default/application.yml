@@ -5,7 +5,7 @@ server:
 eureka:
   client:
     service-url:
-      defaultZone: "http://localhost:8762/eureka/"
+      defaultZone: "http://192.168.8.61:8762/eureka/"
 
 spring:
   threads:
