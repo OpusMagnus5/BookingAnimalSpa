@@ -12,6 +12,7 @@ services:
       test: ["CMD-SHELL", "pg_isready -d $POSTGRES_DB"]
     volumes:
       - postgres:/home/booking_animal_spa/postgres:/
+    network_mode: host
 
   config-server:
      container_name: 'config-server'
@@ -23,6 +24,7 @@ services:
        test: ["CMD-SHELL", "curl -f http://localhost:8888/actuator/health || exit 1"]
      volumes:
        - config-server:/home/booking_animal_spa/config-server:/
+     network_mode: host
 
   gateway:
     container_name: gateway
@@ -37,6 +39,7 @@ services:
         condition: service_healthy
     volumes:
       - gateway:/home/booking_animal_spa/gateway:/
+    network_mode: host
 
   service-discovery:
     container_name: service-discovery
@@ -51,6 +54,7 @@ services:
       test: ["CMD-SHELL", "curl -f http://localhost:8762/actuator/health || exit 1"]
     volumes:
       - service-discovery:/home/booking_animal_spa/service-discovery:/
+    network_mode: host
 
   user-service:
     container_name: user-service
@@ -69,6 +73,7 @@ services:
       - 'env-conf.env'
     volumes:
       - user-service:/home/booking_animal_spa/user-service:/
+    network_mode: host
 
 volumes:
   postgres:
