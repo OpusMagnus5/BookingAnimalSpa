@@ -1,3 +1,7 @@
+/*
+    PARAMETERS
+    - branch default: master
+*/
 pipeline {
     agent {
         label 'ubuntu-jenkins'
@@ -12,7 +16,15 @@ pipeline {
         stage("Download repository") {
             steps {
                 ws('/home/jenkins/workspace') {
-                    git branch: 'master', url: 'https://github.com/OpusMagnus5/BookingAnimalSpa.git'
+                    git branch: '${branch}', url: 'https://github.com/OpusMagnus5/BookingAnimalSpa.git'
+                }
+            }
+        }
+
+        stage('Stop docker containers') {
+            steps {
+                ws('/home/jenkins/workspace') {
+                    sh "docker compose stop"
                 }
             }
         }
@@ -20,7 +32,7 @@ pipeline {
         stage('Docker compose') {
             steps {
                 ws('/home/jenkins/workspace') {
-                    sh "docker compose up --no-recreate --detach"
+                    sh "docker compose up --detach"
                 }
             }
         }

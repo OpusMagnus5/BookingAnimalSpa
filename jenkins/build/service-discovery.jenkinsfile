@@ -1,3 +1,7 @@
+/*
+    PARAMETERS
+    - branch default: master
+*/
 pipeline {
     agent {
         label 'ubuntu-jenkins'
@@ -8,11 +12,15 @@ pipeline {
         dockerTool "Docker"
     }
 
+    environment {
+        IMAGE_NAME = 'service-discovery'
+    }
+
     stages {
         stage("Download repository") {
             steps {
                 ws('/home/jenkins/workspace') {
-                    git branch: 'master', url: 'https://github.com/OpusMagnus5/BookingAnimalSpa.git'
+                    git branch: '${branch}', url: 'https://github.com/OpusMagnus5/BookingAnimalSpa.git'
                 }
             }
         }
@@ -25,14 +33,19 @@ pipeline {
             }
         }
 
+        stage("Remove old docker image") {
+            steps {
+                sh "docker rmi ${IMAGE_NAME} || true"
+            }
+        }
+
         stage('Build docker image') {
             steps {
                 ws('/home/jenkins/workspace') {
                     script {
-                        def dockerImageName = "service-discovery"
                         def dockerfile = "${WORKSPACE}/ServiceDiscovery/Dockerfile"
                         def projectDir = "${WORKSPACE}/ServiceDiscovery"
-                        docker.build(dockerImageName, "-f ${dockerfile} ${projectDir}");
+                        sh "docker build -f ${dockerfile} -t ${IMAGE_NAME} ${projectDir}"
                     }
                 }
             }
