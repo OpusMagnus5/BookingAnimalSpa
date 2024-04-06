@@ -11,7 +11,7 @@ services:
     volumes:
       - type: bind
         source: /home/booking_animal_spa/postgres
-        target: /booking_animal_spa/postgres
+        target: ./
     network_mode: host
 
   config-server:
@@ -23,7 +23,7 @@ services:
      volumes:
        - type: bind
          source: /home/booking_animal_spa/config-server
-         target: /booking_animal_spa/config-server
+         target: ./
      network_mode: host
 
   gateway:
@@ -38,7 +38,7 @@ services:
     volumes:
       - type: bind
         source: /home/booking_animal_spa/gateway
-        target: /booking_animal_spa/gateway
+        target: ./
     network_mode: host
 
   service-discovery:
@@ -53,7 +53,7 @@ services:
     volumes:
       - type: bind
         source: /home/booking_animal_spa/service-discovery
-        target: /booking_animal_spa/service-discovery
+        target: ./
     network_mode: host
 
   user-service:
@@ -72,5 +72,5 @@ services:
     volumes:
       - type: bind
         source: /home/booking_animal_spa/user-service
-        target: /booking_animal_spa/user-service
+        target: ./
     network_mode: host
