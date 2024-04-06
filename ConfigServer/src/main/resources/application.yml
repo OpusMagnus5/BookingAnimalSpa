@@ -7,7 +7,8 @@ spring:
     config:
       server:
         native:
-          searchLocations: 'classpath:/configuration/{application}/{profile}'
+          searchLocations: 'file:${user.dir}${file.separator}resources${file.separator}configuration${file.separator}{application}${file.separator}{profile},
+          file:${user.dir}${file.separator}ConfigServer${file.separator}src${file.separator}main${file.separator}resources${file.separator}configuration${file.separator}{application}${file.separator}{profile}'
   threads:
     virtual:
       enabled: true
