@@ -3,7 +3,7 @@ WORKDIR /app
 COPY target/ConfigServer-1.0.jar ConfigServer-1.0.jar
 RUN java -Djarmode=layertools -jar ConfigServer-1.0.jar extract
 
-COPY src/main/resources app
+COPY src/main/resources ./
 
 FROM openjdk:21-oracle
 WORKDIR /app
