@@ -9,7 +9,9 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d $POSTGRES_DB"]
     volumes:
-      - /home/booking_animal_spa/postgres:/booking_animal_spa/postgres
+      - type: bind
+        source: /home/booking_animal_spa/postgres
+        target: /booking_animal_spa/postgres
     network_mode: host
 
   config-server:
@@ -19,7 +21,9 @@ services:
      healthcheck:
        test: ["CMD-SHELL", "curl -f http://localhost:8888/actuator/health || exit 1"]
      volumes:
-       - /home/booking_animal_spa/config-server:/booking_animal_spa/config-server
+       - type: bind
+         source: /home/booking_animal_spa/config-server
+         target: /booking_animal_spa/config-server
      network_mode: host
 
   gateway:
@@ -32,7 +36,9 @@ services:
       service-discovery:
         condition: service_healthy
     volumes:
-      - /home/booking_animal_spa/gateway:/booking_animal_spa/gateway
+      - type: bind
+        source: /home/booking_animal_spa/gateway
+        target: /booking_animal_spa/gateway
     network_mode: host
 
   service-discovery:
@@ -45,7 +51,9 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8762/actuator/health || exit 1"]
     volumes:
-      - /home/booking_animal_spa/service-discovery:/booking_animal_spa/service-discovery
+      - type: bind
+        source: /home/booking_animal_spa/service-discovery
+        target: /booking_animal_spa/service-discovery
     network_mode: host
 
   user-service:
@@ -62,5 +70,7 @@ services:
     env_file:
       - 'env-conf.env'
     volumes:
-      - /home/booking_animal_spa/user-service:/booking_animal_spa/user-service
+      - type: bind
+        source: /home/booking_animal_spa/user-service
+        target: /booking_animal_spa/user-service
     network_mode: host
