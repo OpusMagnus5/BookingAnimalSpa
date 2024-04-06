@@ -19,7 +19,7 @@ services:
      healthcheck:
        test: ["CMD-SHELL", "curl -f http://localhost:8888/actuator/health || exit 1"]
      volumes:
-       - config-server:/resources
+       - config-server:/app/resources
      network_mode: host
 
   gateway:
