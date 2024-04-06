@@ -4,64 +4,54 @@ services:
     container_name: 'postgres'
     image: postgres:16
     restart: no
-    ports:
-      - '5432:5432'
     env_file:
       - 'env-db.env'
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d $POSTGRES_DB"]
     volumes:
-      - postgres:/home/booking_animal_spa/postgres:/
+      - /home/booking_animal_spa/postgres:/booking_animal_spa/postgres
     network_mode: host
 
   config-server:
      container_name: 'config-server'
-     image: config-server
+     image: config-server:latest
      restart: no
-     ports:
-       - '8888:8888'
      healthcheck:
        test: ["CMD-SHELL", "curl -f http://localhost:8888/actuator/health || exit 1"]
      volumes:
-       - config-server:/home/booking_animal_spa/config-server:/
+       - /home/booking_animal_spa/config-server:/booking_animal_spa/config-server
      network_mode: host
 
   gateway:
     container_name: gateway
-    image: gateway
+    image: gateway:latest
     restart: no
-    ports:
-      - '80:80'
     depends_on:
       config-server:
         condition: service_healthy
       service-discovery:
         condition: service_healthy
     volumes:
-      - gateway:/home/booking_animal_spa/gateway:/
+      - /home/booking_animal_spa/gateway:/booking_animal_spa/gateway
     network_mode: host
 
   service-discovery:
     container_name: service-discovery
-    image: service-discovery
+    image: service-discovery:latest
     restart: on-failure
-    ports:
-      - '8762:8762'
     depends_on:
       config-server:
         condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:8762/actuator/health || exit 1"]
     volumes:
-      - service-discovery:/home/booking_animal_spa/service-discovery:/
+      - /home/booking_animal_spa/service-discovery:/booking_animal_spa/service-discovery
     network_mode: host
 
   user-service:
     container_name: user-service
-    image: user-service
+    image: user-service:latest
     restart: no
-    ports:
-      - '8080'
     depends_on:
       config-server:
         condition: service_healthy
@@ -72,12 +62,5 @@ services:
     env_file:
       - 'env-conf.env'
     volumes:
-      - user-service:/home/booking_animal_spa/user-service:/
+      - /home/booking_animal_spa/user-service:/booking_animal_spa/user-service
     network_mode: host
-
-volumes:
-  postgres:
-  config-server:
-  gateway:
-  service-discovery:
-  user-service:
