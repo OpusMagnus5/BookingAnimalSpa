@@ -39,7 +39,7 @@ class UserController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/login")
+    @GetMapping("")
     ReadResourceResponse login(@RequestParam(required = false) String username,
                                @RequestParam(required = false) String phoneNumber,
                                @RequestParam(required = false) String email) {
